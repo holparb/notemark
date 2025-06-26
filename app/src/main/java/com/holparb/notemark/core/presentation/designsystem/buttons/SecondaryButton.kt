@@ -1,7 +1,7 @@
 package com.holparb.notemark.core.presentation.designsystem.buttons
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -40,6 +40,8 @@ fun SecondaryButton(
 
     OutlinedButton(
         onClick = onClick,
+        modifier = modifier,
+        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 10.dp),
         enabled = enabled,
         colors = ButtonDefaults.outlinedButtonColors(
             containerColor = buttonContainerColor,
@@ -49,8 +51,7 @@ fun SecondaryButton(
         border = BorderStroke(
             1.dp,
             borderColor
-        ),
-        modifier = modifier.padding(horizontal = 20.dp, vertical = 10.dp)
+        )
     ) {
         Text(
             text = text,
@@ -67,7 +68,7 @@ private fun SecondaryButtonPreview() {
             text = "Label",
             containerColor = MaterialTheme.colorScheme.secondary,
             onClick = {},
-            enabled = false
+            enabled = true
         )
     }
 }
