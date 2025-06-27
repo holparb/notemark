@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.holparb.notemark.R
@@ -21,24 +23,40 @@ import com.holparb.notemark.core.presentation.designsystem.theme.NoteMarkTheme
 fun LandingBody(
     onLoginClick: () -> Unit,
     onRegisterClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    centerText: Boolean = false
 ) {
     Column(
         modifier = modifier
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = if(centerText) {
+                Alignment.CenterHorizontally
+            } else {
+                Alignment.Start
+            }
         ) {
             Text(
                 text = stringResource(R.string.your_own_collection_of_notes),
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = if(centerText) {
+                    TextAlign.Center
+                } else {
+                    null
+                }
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
                 text = stringResource(R.string.capture_your_thoughts_and_ideas),
                 style = MaterialTheme.typography.bodyLarge.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                ),
+                textAlign = if(centerText) {
+                    TextAlign.Center
+                } else {
+                    null
+                }
             )
         }
         Spacer(modifier = Modifier.height(40.dp))
@@ -63,7 +81,8 @@ private fun LandingBodyPreview() {
         LandingBody(
             onLoginClick = {},
             onRegisterClick = {},
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            centerText = true
         )
     }
 }
