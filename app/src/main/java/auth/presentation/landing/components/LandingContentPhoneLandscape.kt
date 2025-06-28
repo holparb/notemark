@@ -4,14 +4,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -23,53 +23,53 @@ import com.holparb.notemark.R
 import com.holparb.notemark.core.presentation.designsystem.theme.NoteMarkTheme
 
 @Composable
-fun LandingContentTablet(
+fun LandingContentPhoneLandscape(
     onLoginClick: () -> Unit,
     onRegisterClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(
-        modifier = modifier.fillMaxSize()
+    Row(
+        modifier = modifier
+            .fillMaxSize()
             .background(color = Color(0xFFE0EAFF))
     ) {
         Image(
             painter = painterResource(R.drawable.landing_image),
             contentDescription = null,
             modifier = Modifier
-                .fillMaxWidth(),
-            contentScale = ContentScale.FillWidth
+                .fillMaxHeight(),
+            contentScale = ContentScale.FillHeight
         )
-        Row(
-            Modifier
-                .align(Alignment.BottomCenter)
-                .padding(horizontal = 60.dp),
-            horizontalArrangement = Arrangement.Center
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(1f),
+            verticalArrangement = Arrangement.Center
         ) {
             Box(
                 modifier = Modifier
                     .background(
                         color = MaterialTheme.colorScheme.surfaceContainerLowest,
-                        shape = RoundedCornerShape(20.dp, 20.dp)
+                        shape = RoundedCornerShape(20.dp, 0.dp, 0.dp, 20.dp)
                     )
-                    .padding(48.dp)
+                    .padding(40.dp)
             ) {
                 LandingBody(
                     onLoginClick = onLoginClick,
-                    onRegisterClick = onRegisterClick,
-                    centerText = true
+                    onRegisterClick = onRegisterClick
                 )
             }
         }
     }
 }
 
-@Preview(name = "Tablet Portrait", device = Devices.TABLET, widthDp = 800, heightDp = 1400)
+@Preview(name = "Phone Landscape", device = Devices.PHONE, widthDp = 800, heightDp = 400)
 @Composable
-private fun LandingContentTabletPreview() {
+private fun LandingContentLandscapePreview() {
     NoteMarkTheme {
-        LandingContentTablet(
-            onLoginClick = {},
-            onRegisterClick = {}
+        LandingContentPhoneLandscape(
+            onRegisterClick = {},
+            onLoginClick = {}
         )
     }
 }
