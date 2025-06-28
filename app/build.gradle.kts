@@ -54,9 +54,15 @@ dependencies {
     // Splash Screen
     implementation(libs.androidx.core.splashscreen)
 
+    // Adaptive Screen Sizes
+    implementation(libs.material3.adaptive)
+
     // Navigation
     implementation(libs.androidx.compose.navigation)
     implementation(libs.kotlinx.serialization.json)
+
+    // Koin (Service Locator)
+    implementation(libs.bundles.koin)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -1,7 +1,7 @@
 package com.holparb.notemark.core.presentation.designsystem.buttons
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -28,8 +28,9 @@ fun PrimaryButton(
     enabled: Boolean = true
 ) {
     Button (
-        modifier = modifier.padding(horizontal = 20.dp, vertical = 10.dp),
+        modifier = modifier,
         onClick = onClick,
+        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 10.dp),
         enabled = enabled,
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(
@@ -82,7 +83,7 @@ private fun PrimaryButtonPreview() {
                     contentDescription = null
                 )
             },
-            enabled = false,
+            enabled = true,
             onClick = {}
         )
     }
