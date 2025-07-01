@@ -1,0 +1,132 @@
+package auth.presentation.register.components
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import auth.presentation.components.TextLink
+import com.holparb.notemark.R
+import com.holparb.notemark.core.presentation.designsystem.buttons.PrimaryButton
+import com.holparb.notemark.core.presentation.designsystem.textinputs.NoteMarkTextInput
+import com.holparb.notemark.core.presentation.designsystem.theme.NoteMarkTheme
+
+@Composable
+fun RegisterFormSection(
+    usernameText: String,
+    onUsernameChange: (String) -> Unit,
+    isUsernameValid: Boolean,
+    emailText: String,
+    onEmailChange: (String) -> Unit,
+    isEmailValid: Boolean,
+    passwordText: String,
+    onPasswordChange: (String) -> Unit,
+    isPasswordValid: Boolean,
+    repeatPasswordText: String,
+    onRepeatPasswordChange: (String) -> Unit,
+    isRepeatPasswordValid: Boolean,
+    onCreateAccountClick: () -> Unit,
+    onLoginLinkClick: () -> Unit,
+    createAccountButtonEnabled: Boolean,
+    modifier: Modifier = Modifier
+) {
+    var isUsernameInputFocused by remember {
+        mutableStateOf(false)
+    }
+
+    var isPasswordInputFocused by remember {
+        mutableStateOf(false)
+    }
+
+    Column(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        NoteMarkTextInput(
+            text = usernameText,
+            onTextValueChange = onUsernameChange,
+            supportingText = stringResource(R.string.registration_username_supporting_text),
+            hintText = stringResource(R.string.registration_username_hint),
+            labelText = stringResource(R.string.username),
+            isError = !isUsernameValid,
+            isSupportingTextVisible = isUsernameInputFocused,
+            modifier = Modifier.onFocusChanged { focusState ->
+                isUsernameInputFocused = focusState.isFocused
+            }
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        NoteMarkTextInput(
+            text = emailText,
+            onTextValueChange = onEmailChange,
+            hintText = stringResource(R.string.registration_email_hint),
+            labelText = stringResource(R.string.email),
+            isError = !isEmailValid
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        NoteMarkTextInput(
+            text = passwordText,
+            onTextValueChange = onPasswordChange,
+            supportingText = stringResource(R.string.registration_password_supporting_text),
+            hintText = stringResource(R.string.password),
+            labelText = stringResource(R.string.password),
+            isError = !isPasswordValid,
+            isSupportingTextVisible = isPasswordInputFocused,
+            modifier = Modifier.onFocusChanged { focusState ->  
+                isPasswordInputFocused = focusState.isFocused
+            }
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        NoteMarkTextInput(
+            text = repeatPasswordText,
+            onTextValueChange = onRepeatPasswordChange,
+            hintText = stringResource(R.string.password),
+            labelText = stringResource(R.string.repeat_password),
+            isError = !isRepeatPasswordValid
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        PrimaryButton(
+            text = stringResource(R.string.create_account),
+            onClick = onCreateAccountClick,
+            modifier = Modifier.fillMaxWidth(),
+            enabled = createAccountButtonEnabled
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        TextLink(
+            text = stringResource(R.string.sign_in_link_text),
+            onClick = onLoginLinkClick,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun RegisterFormSectionPreview() {
+    NoteMarkTheme {
+        RegisterFormSection(
+            usernameText = "John Doe",
+            onUsernameChange = {},
+            emailText = "asd@mail.com",
+            onEmailChange = {},
+            passwordText = "",
+            repeatPasswordText = "",
+            onPasswordChange = {},
+            onRepeatPasswordChange = {},
+            onLoginLinkClick = {},
+            onCreateAccountClick = {},
+            isPasswordValid = true,
+            isUsernameValid = true,
+            isRepeatPasswordValid = true,
+            isEmailValid = true,
+            createAccountButtonEnabled = true
+        )
+    }
+}

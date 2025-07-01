@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -20,15 +22,19 @@ import androidx.compose.ui.unit.dp
 import com.holparb.notemark.core.presentation.designsystem.theme.NoteMarkTheme
 
 @Composable
-fun MainTextInput(
+fun NoteMarkTextInput(
     text: String,
-    supportingText: String,
-    hintText: String,
     labelText: String,
     onTextValueChange: (String) -> Unit,
     isError: Boolean,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    supportingText: String? = null,
+    isSupportingTextVisible: Boolean = false,
+    hintText: String? = null,
+    enabled: Boolean = true,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    singleLine: Boolean = true
 ) {
     Column(
         modifier = modifier,
@@ -54,18 +60,29 @@ fun MainTextInput(
             shape = RoundedCornerShape(12.dp),
             colors = noteMarkTextFieldColors(),
             placeholder = {
-                Text(
-                    text = hintText,
-                    style = MaterialTheme.typography.bodyLarge
-                )
+                if(hintText != null) {
+                    Text(
+                        text = hintText,
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    )
+                }
             },
             supportingText = {
-                Text(
-                    text = supportingText,
-                    style = MaterialTheme.typography.bodySmall
-                )
+                if(supportingText != null && isSupportingTextVisible) {
+                    Text(
+                        text = supportingText,
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    )
+                }
             },
             isError = isError,
+            keyboardActions = keyboardActions,
+            keyboardOptions = keyboardOptions,
+            singleLine = singleLine
         )
     }
 }
@@ -98,7 +115,7 @@ fun noteMarkTextFieldColors(): TextFieldColors {
 @Composable
 private fun MainTextInputPreview() {
     NoteMarkTheme {
-        MainTextInput(
+        NoteMarkTextInput(
             text = "Input",
             onTextValueChange = {},
             supportingText = "Supporting text",

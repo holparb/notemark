@@ -32,17 +32,17 @@ fun LandingScreen(
         modifier = Modifier.background(
             color = Color(0xFFE0EAFF)
         )
-    ) { paddingValues ->
+    ) { innerPadding ->
         when(deviceConfiguration) {
             DeviceConfiguration.PHONE_PORTRAIT -> {
                 LandingContentPhonePortrait(
                     onLoginClick = onNavigateToLogin,
                     onRegisterClick = onNavigateToRegister,
                     modifier = Modifier.padding(
-                        start = paddingValues.calculateStartPadding(LayoutDirection.Ltr),
-                        end = paddingValues.calculateEndPadding(LayoutDirection.Ltr),
+                        start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
+                        end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
                         top = 0.dp,
-                        bottom = paddingValues.calculateBottomPadding()
+                        bottom = innerPadding.calculateBottomPadding()
                     )
                 )
             }
@@ -51,10 +51,10 @@ fun LandingScreen(
                     onLoginClick = onNavigateToLogin,
                     onRegisterClick = onNavigateToRegister,
                     modifier = Modifier.padding(
-                        start = paddingValues.calculateStartPadding(LayoutDirection.Ltr),
-                        end = paddingValues.calculateEndPadding(LayoutDirection.Ltr),
+                        start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
+                        end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
                         top = 0.dp,
-                        bottom = paddingValues.calculateBottomPadding()
+                        bottom = innerPadding.calculateBottomPadding()
                     )
                 )
             }
@@ -63,10 +63,10 @@ fun LandingScreen(
                     onLoginClick = onNavigateToLogin,
                     onRegisterClick = onNavigateToRegister,
                     modifier = Modifier.padding(
-                        start = paddingValues.calculateStartPadding(LayoutDirection.Ltr),
-                        end = paddingValues.calculateEndPadding(LayoutDirection.Ltr),
+                        start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
+                        end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
                         top = 0.dp,
-                        bottom = paddingValues.calculateBottomPadding()
+                        bottom = innerPadding.calculateBottomPadding()
                     )
                 )
             }
@@ -75,10 +75,10 @@ fun LandingScreen(
                     onLoginClick = onNavigateToLogin,
                     onRegisterClick = onNavigateToRegister,
                     modifier = Modifier.padding(
-                        start = paddingValues.calculateStartPadding(LayoutDirection.Ltr),
-                        end = paddingValues.calculateEndPadding(LayoutDirection.Ltr),
+                        start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
+                        end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
                         top = 0.dp,
-                        bottom = paddingValues.calculateBottomPadding()
+                        bottom = innerPadding.calculateBottomPadding()
                     )
                 )
             }
