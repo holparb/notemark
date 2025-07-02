@@ -29,5 +29,4 @@ fun Modifier.rootModifier(innerPadding: PaddingValues): Modifier {
         )
         .background(color = MaterialTheme.colorScheme.surfaceContainerLowest)
         .consumeWindowInsets(WindowInsets.navigationBars)
-        .verticalScroll(rememberScrollState())
 }

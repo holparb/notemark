@@ -43,7 +43,15 @@ fun RegisterFormSection(
         mutableStateOf(false)
     }
 
+    var isEmalInputFocused by remember {
+        mutableStateOf(false)
+    }
+
     var isPasswordInputFocused by remember {
+        mutableStateOf(false)
+    }
+
+    var isRepeatPasswordInputFocused by remember {
         mutableStateOf(false)
     }
 
@@ -56,7 +64,7 @@ fun RegisterFormSection(
             supportingText = stringResource(R.string.registration_username_supporting_text),
             hintText = stringResource(R.string.registration_username_hint),
             labelText = stringResource(R.string.username),
-            isError = !isUsernameValid,
+            isError = !isUsernameValid && !isUsernameInputFocused,
             isSupportingTextVisible = isUsernameInputFocused,
             modifier = Modifier.onFocusChanged { focusState ->
                 isUsernameInputFocused = focusState.isFocused
@@ -68,7 +76,10 @@ fun RegisterFormSection(
             onTextValueChange = onEmailChange,
             hintText = stringResource(R.string.registration_email_hint),
             labelText = stringResource(R.string.email),
-            isError = !isEmailValid
+            isError = !isEmailValid && !isEmalInputFocused,
+            modifier = Modifier.onFocusChanged { focusState ->
+                isEmalInputFocused = focusState.isFocused
+            }
         )
         Spacer(modifier = Modifier.height(16.dp))
         NoteMarkTextInput(
@@ -77,7 +88,7 @@ fun RegisterFormSection(
             supportingText = stringResource(R.string.registration_password_supporting_text),
             hintText = stringResource(R.string.password),
             labelText = stringResource(R.string.password),
-            isError = !isPasswordValid,
+            isError = !isPasswordValid && !isPasswordInputFocused,
             isSupportingTextVisible = isPasswordInputFocused,
             modifier = Modifier.onFocusChanged { focusState ->  
                 isPasswordInputFocused = focusState.isFocused
@@ -89,7 +100,10 @@ fun RegisterFormSection(
             onTextValueChange = onRepeatPasswordChange,
             hintText = stringResource(R.string.password),
             labelText = stringResource(R.string.repeat_password),
-            isError = !isRepeatPasswordValid
+            isError = !isRepeatPasswordValid && !isRepeatPasswordInputFocused,
+            modifier = Modifier.onFocusChanged { focusState ->
+                isRepeatPasswordInputFocused = focusState.isFocused
+            }
         )
         Spacer(modifier = Modifier.height(24.dp))
         PrimaryButton(

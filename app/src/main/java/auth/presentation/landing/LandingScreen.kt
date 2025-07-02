@@ -22,8 +22,8 @@ import com.holparb.notemark.core.presentation.util.DeviceConfiguration
 
 @Composable
 fun LandingScreen(
-    onNavigateToLogin: () -> Unit,
-    onNavigateToRegister: () -> Unit
+    navigateToLogin: () -> Unit,
+    navigateToRegister: () -> Unit
 ) {
     val deviceConfiguration = DeviceConfiguration.fromWindowSizeClass(
        currentWindowAdaptiveInfo().windowSizeClass
@@ -36,8 +36,8 @@ fun LandingScreen(
         when(deviceConfiguration) {
             DeviceConfiguration.PHONE_PORTRAIT -> {
                 LandingContentPhonePortrait(
-                    onLoginClick = onNavigateToLogin,
-                    onRegisterClick = onNavigateToRegister,
+                    onLoginClick = navigateToLogin,
+                    onRegisterClick = navigateToRegister,
                     modifier = Modifier.padding(
                         start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
                         end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
@@ -48,8 +48,8 @@ fun LandingScreen(
             }
             DeviceConfiguration.PHONE_LANDSCAPE -> {
                 LandingContentPhoneLandscape(
-                    onLoginClick = onNavigateToLogin,
-                    onRegisterClick = onNavigateToRegister,
+                    onLoginClick = navigateToLogin,
+                    onRegisterClick = navigateToRegister,
                     modifier = Modifier.padding(
                         start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
                         end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
@@ -60,8 +60,8 @@ fun LandingScreen(
             }
             DeviceConfiguration.TABLET_PORTRAIT -> {
                 LandingContentTabletPortrait(
-                    onLoginClick = onNavigateToLogin,
-                    onRegisterClick = onNavigateToRegister,
+                    onLoginClick = navigateToLogin,
+                    onRegisterClick = navigateToRegister,
                     modifier = Modifier.padding(
                         start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
                         end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
@@ -72,8 +72,8 @@ fun LandingScreen(
             }
             DeviceConfiguration.TABLET_LANDSCAPE-> {
                 LandingContentTabletLandscape(
-                    onLoginClick = onNavigateToLogin,
-                    onRegisterClick = onNavigateToRegister,
+                    onLoginClick = navigateToLogin,
+                    onRegisterClick = navigateToRegister,
                     modifier = Modifier.padding(
                         start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
                         end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
@@ -93,8 +93,8 @@ fun LandingScreen(
 private fun LandingScreenPreview() {
     NoteMarkTheme {
         LandingScreen(
-            onNavigateToRegister = {},
-            onNavigateToLogin = {}
+            navigateToRegister = {},
+            navigateToLogin = {}
         )
     }
 }
@@ -104,8 +104,8 @@ private fun LandingScreenPreview() {
 private fun LandingContentLandscapePreview() {
     NoteMarkTheme {
         LandingScreen(
-            onNavigateToRegister = {},
-            onNavigateToLogin = {}
+            navigateToRegister = {},
+            navigateToLogin = {}
         )
     }
 }
@@ -115,8 +115,8 @@ private fun LandingContentLandscapePreview() {
 private fun LandingContentTabletPreview() {
     NoteMarkTheme {
         LandingScreen(
-            onNavigateToRegister = {},
-            onNavigateToLogin = {}
+            navigateToRegister = {},
+            navigateToLogin = {}
         )
     }
 }
@@ -126,8 +126,8 @@ private fun LandingContentTabletPreview() {
 private fun LandingContentTabletLandscapePreview() {
     NoteMarkTheme {
         LandingScreen(
-            onNavigateToRegister = {},
-            onNavigateToLogin = {}
+            navigateToRegister = {},
+            navigateToLogin = {}
         )
     }
 }

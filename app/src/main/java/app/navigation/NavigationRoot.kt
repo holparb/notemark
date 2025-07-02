@@ -18,15 +18,17 @@ fun NavigationRoot(
     ) {
         composable<NavigationRoute.Landing> {
             LandingScreen(
-                onNavigateToLogin = { navController.navigate(NavigationRoute.Login) },
-                onNavigateToRegister = { navController.navigate(NavigationRoute.Register) }
+                navigateToLogin = { navController.navigate(NavigationRoute.Login) },
+                navigateToRegister = { navController.navigate(NavigationRoute.Register) }
             )
         }
         composable<NavigationRoute.Login> {
             LoginRoot()
         }
         composable<NavigationRoute.Register> {
-            RegisterRoot()
+            RegisterRoot(
+                navigateToLogin = { navController.navigate(NavigationRoute.Login) }
+            )
         }
     }
 }
