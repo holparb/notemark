@@ -2,7 +2,10 @@ package auth.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -23,4 +26,5 @@ fun Modifier.rootModifier(innerPadding: PaddingValues): Modifier {
             )
         )
         .background(color = MaterialTheme.colorScheme.surfaceContainerLowest)
+        .consumeWindowInsets(WindowInsets.navigationBars)
 }

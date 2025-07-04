@@ -1,11 +1,12 @@
 package auth.presentation.register
 
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
@@ -17,6 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import auth.presentation.components.rootModifier
 import auth.presentation.register.components.RegisterContentPhoneLandscape
 import auth.presentation.register.components.RegisterContentPhonePortrait
+import auth.presentation.register.components.RegisterContentTablet
 import com.holparb.notemark.core.presentation.designsystem.theme.NoteMarkTheme
 import com.holparb.notemark.core.presentation.util.DeviceConfiguration
 import org.koin.androidx.compose.koinViewModel
@@ -56,7 +58,7 @@ fun RegisterScreen(
         when(deviceConfiguration) {
             DeviceConfiguration.PHONE_PORTRAIT -> {
                 RegisterContentPhonePortrait(
-                    modifier = rootModifier.consumeWindowInsets(WindowInsets.navigationBars),
+                    modifier = rootModifier,
                     usernameText = state.username,
                     onUsernameChange = {
                         onAction(RegisterAction.OnUsernameChange(it))
@@ -118,8 +120,43 @@ fun RegisterScreen(
                     }
                 )
             }
-            DeviceConfiguration.TABLET_PORTRAIT -> TODO()
-            DeviceConfiguration.TABLET_LANDSCAPE -> TODO()
+            DeviceConfiguration.TABLET_PORTRAIT,
+            DeviceConfiguration.TABLET_LANDSCAPE -> {
+                RegisterContentTablet(
+                    modifier = if(deviceConfiguration == DeviceConfiguration.TABLET_PORTRAIT) {
+                        rootModifier
+                    } else {
+                        rootModifier.verticalScroll(rememberScrollState())
+                    },
+                    usernameText = state.username,
+                    onUsernameChange = {
+                        onAction(RegisterAction.OnUsernameChange(it))
+                    },
+                    isUsernameValid = state.isUserNameValid,
+                    passwordText = state.password,
+                    onPasswordChange = {
+                        onAction(RegisterAction.OnPasswordChange(it))
+                    },
+                    isPasswordValid = state.isPasswordValid,
+                    emailText = state.email,
+                    onEmailChange = {
+                        onAction(RegisterAction.OnEmailChange(it))
+                    },
+                    isEmailValid = state.isEmailValid,
+                    repeatPasswordText = state.repeatPassword,
+                    onRepeatPasswordChange = {
+                        onAction(RegisterAction.OnRepeatPasswordChange(it))
+                    },
+                    isRepeatPasswordValid = state.isRepeatPasswordValid,
+                    createAccountButtonEnabled = state.isRegisterFormValid,
+                    onLoginLinkClick = {
+                        onAction(RegisterAction.OnLoginClick)
+                    },
+                    onCreateAccountClick = {
+                        onAction(RegisterAction.OnCreateAccountClick)
+                    }
+                )
+            }
             DeviceConfiguration.UNKNOWN -> Unit
         }
     }

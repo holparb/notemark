@@ -1,0 +1,107 @@
+package auth.presentation.register.components
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import auth.presentation.components.rootModifier
+import com.holparb.notemark.core.presentation.designsystem.theme.NoteMarkTheme
+
+@Composable
+fun RegisterContentTablet(
+    usernameText: String,
+    onUsernameChange: (String) -> Unit,
+    isUsernameValid: Boolean,
+    emailText: String,
+    onEmailChange: (String) -> Unit,
+    isEmailValid: Boolean,
+    passwordText: String,
+    onPasswordChange: (String) -> Unit,
+    isPasswordValid: Boolean,
+    repeatPasswordText: String,
+    onRepeatPasswordChange: (String) -> Unit,
+    isRepeatPasswordValid: Boolean,
+    onCreateAccountClick: () -> Unit,
+    onLoginLinkClick: () -> Unit,
+    createAccountButtonEnabled: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.padding(horizontal = 120.dp, vertical = 100.dp),
+        verticalArrangement = Arrangement.spacedBy(32.dp)
+    ) {
+        RegisterHeaderSection()
+        RegisterFormSection(
+            usernameText = usernameText,
+            onUsernameChange = onUsernameChange,
+            isUsernameValid = isUsernameValid,
+            emailText = emailText,
+            onEmailChange = onEmailChange,
+            isEmailValid = isEmailValid,
+            passwordText = passwordText,
+            onPasswordChange = onPasswordChange,
+            isPasswordValid = isPasswordValid,
+            repeatPasswordText = repeatPasswordText,
+            onRepeatPasswordChange = onRepeatPasswordChange,
+            isRepeatPasswordValid = isRepeatPasswordValid,
+            onCreateAccountClick = onCreateAccountClick,
+            onLoginLinkClick = onLoginLinkClick,
+            createAccountButtonEnabled = createAccountButtonEnabled
+        )
+    }
+}
+
+@Preview(name = "Tablet Portrait", device = Devices.TABLET, widthDp = 720, heightDp = 1280)
+@Composable
+private fun RegisterContentTabletPortraitPreview() {
+    NoteMarkTheme {
+        RegisterContentTablet(
+            usernameText = "John Doe",
+            onUsernameChange = {},
+            emailText = "asd@mail.com",
+            onEmailChange = {},
+            passwordText = "",
+            repeatPasswordText = "",
+            onPasswordChange = {},
+            onRepeatPasswordChange = {},
+            onLoginLinkClick = {},
+            onCreateAccountClick = {},
+            isPasswordValid = true,
+            isUsernameValid = true,
+            isRepeatPasswordValid = true,
+            isEmailValid = true,
+            createAccountButtonEnabled = true,
+            modifier = Modifier.rootModifier(innerPadding = PaddingValues(0.dp))
+        )
+    }
+}
+
+@Preview(name = "Tablet Landscape", device = Devices.TABLET, widthDp = 1280, heightDp = 720)
+@Composable
+private fun RegisterContentTabletLandscapePreview() {
+    NoteMarkTheme {
+        RegisterContentTablet(
+            usernameText = "John Doe",
+            onUsernameChange = {},
+            emailText = "asd@mail.com",
+            onEmailChange = {},
+            passwordText = "",
+            repeatPasswordText = "",
+            onPasswordChange = {},
+            onRepeatPasswordChange = {},
+            onLoginLinkClick = {},
+            onCreateAccountClick = {},
+            isPasswordValid = true,
+            isUsernameValid = true,
+            isRepeatPasswordValid = true,
+            isEmailValid = true,
+            createAccountButtonEnabled = true,
+            modifier = Modifier.rootModifier(innerPadding = PaddingValues(0.dp))
+        )
+    }
+}
