@@ -1,4 +1,4 @@
-package auth.domain
+package auth.domain.register
 
 interface RegistrationFormValidator {
     fun validateUsername(username: String): Boolean

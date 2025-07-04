@@ -1,4 +1,4 @@
-package auth.domain
+package auth.domain.register
 
 class RegistrationFormValidatorImpl: RegistrationFormValidator {
 
@@ -7,12 +7,14 @@ class RegistrationFormValidatorImpl: RegistrationFormValidator {
     }
 
     override fun validateEmail(email: String): Boolean {
+        val emailPattern = "[a-zA-Z0-9+_.-]+@[a-z-]+\\.[a-z]+".toRegex()
         return email.isNotBlank()
-                && email.matches(Regex("[a-zA-Z0-9+_.-]+@[a-z-]+\\.[a-z]+"))
+                && email.matches(emailPattern)
     }
 
     override fun validatePassword(password: String): Boolean {
-        return password.length >= 8
-                && password.matches(Regex("^(?=.*[A-Za-z])(?=.*[\\d\\W]).+$"))
+        val hasValidLength = password.length >= 8
+        val hasDigitOrSpecialChar = password.all { !it.isLetter() }
+        return hasValidLength && hasDigitOrSpecialChar
     }
 }
