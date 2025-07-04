@@ -2,13 +2,18 @@ package auth.presentation.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import auth.domain.form_validator.RegistrationFormValidator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
-class RegisterViewModel : ViewModel() {
+class RegisterViewModel(
+    private val registrationFormValidator: RegistrationFormValidator
+) : ViewModel() {
 
     private var hasLoadedInitialData = false
 
@@ -16,7 +21,7 @@ class RegisterViewModel : ViewModel() {
     val state = _state
         .onStart {
             if (!hasLoadedInitialData) {
-                /** Load initial data here **/
+                observeFormValidation()
                 hasLoadedInitialData = true
             }
         }
@@ -26,6 +31,11 @@ class RegisterViewModel : ViewModel() {
             initialValue = RegisterState()
         )
 
+    private val _isUsernameValid = MutableStateFlow(false)
+    private val _isEmailValid = MutableStateFlow(false)
+    private val _isPasswordValid = MutableStateFlow(false)
+    private val _isRepeatPasswordValid = MutableStateFlow(false)
+
     fun onAction(action: RegisterAction) {
         when (action) {
             RegisterAction.OnCreateAccountClick -> createAccount()
@@ -33,14 +43,82 @@ class RegisterViewModel : ViewModel() {
             is RegisterAction.OnPasswordChange -> onPasswordChange(action.text)
             is RegisterAction.OnRepeatPasswordChange -> onRepeatPasswordChange(action.text)
             is RegisterAction.OnUsernameChange -> onUsernameChange(action.text)
-            else -> Unit
+            is RegisterAction.OnValidateEmail -> validateEmail()
+            is RegisterAction.OnValidatePassword -> validatePassword()
+            is RegisterAction.OnValidateRepeatPassword -> validateRepeatPassword()
+            is RegisterAction.OnValidateUsername -> validateUsername()
+            RegisterAction.OnLoginClick -> Unit
         }
+    }
+
+    private fun observeFormValidation() {
+        combine(
+            _isUsernameValid,
+            _isEmailValid,
+            _isPasswordValid,
+            _isRepeatPasswordValid
+        ) { isUsernameValid, isEmailValid, isPasswordValid, isRepeatPasswordValid ->
+            _state.update {
+                it.copy(
+                    isRegisterFormValid = isUsernameValid && isEmailValid
+                            && isPasswordValid && isRepeatPasswordValid
+                )
+            }
+        }
+            .launchIn(viewModelScope)
+    }
+
+    private fun validateUsername() {
+        val validationResult = registrationFormValidator.validateUsername(state.value.username)
+        _state.update {
+            it.copy(
+                isUserNameValid = validationResult.isValid,
+                usernameErrorMessage = validationResult.errorMessage
+            )
+        }
+        _isUsernameValid.update { validationResult.isValid }
+    }
+
+    private fun validateRepeatPassword() {
+        val validationResult = registrationFormValidator.validateRepeatPassword(
+            password = state.value.password,
+            repeatPassword = state.value.repeatPassword
+        )
+        _state.update {
+            it.copy(
+                isRepeatPasswordValid = validationResult.isValid,
+                repeatPasswordErrorMessage = validationResult.errorMessage
+            )
+        }
+        _isRepeatPasswordValid.update { validationResult.isValid }
+    }
+
+    private fun validatePassword() {
+        val validationResult = registrationFormValidator.validatePassword(state.value.password)
+        _state.update {
+            it.copy(
+                isPasswordValid = validationResult.isValid,
+                passwordErrorMessage = validationResult.errorMessage
+            )
+        }
+        _isPasswordValid.update { validationResult.isValid }
+    }
+
+    private fun validateEmail() {
+        val validationResult = registrationFormValidator.validateEmail(state.value.email)
+        _state.update {
+            it.copy(
+                isEmailValid = validationResult.isValid,
+                emailErrorMessage = validationResult.errorMessage
+            )
+        }
+        _isEmailValid.update { validationResult.isValid }
     }
 
     private fun onUsernameChange(text: String) {
         _state.update {
             it.copy(
-                username = text
+                username = text,
             )
         }
     }
@@ -48,8 +126,7 @@ class RegisterViewModel : ViewModel() {
     private fun onRepeatPasswordChange(text: String) {
         _state.update {
             it.copy(
-                repeatPassword = text,
-                isRepeatPasswordValid = text == state.value.password
+                repeatPassword = text
             )
         }
     }
@@ -57,7 +134,7 @@ class RegisterViewModel : ViewModel() {
     private fun onPasswordChange(text: String) {
         _state.update {
             it.copy(
-                password = text
+                password = text,
             )
         }
     }
@@ -73,5 +150,4 @@ class RegisterViewModel : ViewModel() {
     private fun createAccount() {
         TODO("Not yet implemented")
     }
-
 }

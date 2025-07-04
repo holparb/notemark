@@ -42,6 +42,7 @@ fun NoteMarkTextInput(
     isError: Boolean,
     modifier: Modifier = Modifier,
     supportingText: String? = null,
+    errorText: String? = null,
     isSupportingTextVisible: Boolean = false,
     hintText: String? = null,
     enabled: Boolean = true,
@@ -52,6 +53,12 @@ fun NoteMarkTextInput(
 ) {
     var showText by remember {
         mutableStateOf(false)
+    }
+
+    val supportingTextText = if(isError && errorText != null) {
+        errorText
+    } else {
+        supportingText
     }
 
     Column(
@@ -88,12 +95,10 @@ fun NoteMarkTextInput(
                 }
             },
             supportingText = {
-                if(supportingText != null && isSupportingTextVisible) {
+                if((supportingText != null && isSupportingTextVisible) || (errorText != null && isError)) {
                     Text(
-                        text = supportingText,
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        text = supportingTextText ?: "",
+                        style = MaterialTheme.typography.bodySmall
                     )
                 }
             },

@@ -29,7 +29,15 @@ fun RegisterContentTablet(
     onCreateAccountClick: () -> Unit,
     onLoginLinkClick: () -> Unit,
     createAccountButtonEnabled: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    usernameErrorText: String? = null,
+    emailErrorText: String? = null,
+    passwordErrorText: String? = null,
+    repeatPasswordErrorText: String? = null,
+    onValidateUsername: () -> Unit,
+    onValidateEmail: () -> Unit,
+    onValidatePassword: () -> Unit,
+    onValidateRepeatPassword: () -> Unit,
 ) {
     Column(
         modifier = modifier.padding(horizontal = 120.dp, vertical = 100.dp),
@@ -51,6 +59,14 @@ fun RegisterContentTablet(
             isRepeatPasswordValid = isRepeatPasswordValid,
             onCreateAccountClick = onCreateAccountClick,
             onLoginLinkClick = onLoginLinkClick,
+            usernameErrorText = usernameErrorText,
+            emailErrorText = emailErrorText,
+            passwordErrorText = passwordErrorText,
+            repeatPasswordErrorText = repeatPasswordErrorText,
+            onValidateUsername = onValidateUsername,
+            onValidateEmail = onValidateEmail,
+            onValidatePassword = onValidatePassword,
+            onValidateRepeatPassword = onValidateRepeatPassword,
             createAccountButtonEnabled = createAccountButtonEnabled
         )
     }
@@ -76,6 +92,14 @@ private fun RegisterContentTabletPortraitPreview() {
             isRepeatPasswordValid = true,
             isEmailValid = true,
             createAccountButtonEnabled = true,
+            usernameErrorText = "Username invalid",
+            passwordErrorText = "Password invalid",
+            emailErrorText = "Email invalid",
+            repeatPasswordErrorText = "Password must match",
+            onValidateUsername = {},
+            onValidatePassword = {},
+            onValidateEmail = {},
+            onValidateRepeatPassword = {},
             modifier = Modifier.rootModifier(innerPadding = PaddingValues(0.dp))
         )
     }
@@ -101,6 +125,14 @@ private fun RegisterContentTabletLandscapePreview() {
             isRepeatPasswordValid = true,
             isEmailValid = true,
             createAccountButtonEnabled = true,
+            usernameErrorText = "Username invalid",
+            passwordErrorText = "Password invalid",
+            emailErrorText = "Email invalid",
+            repeatPasswordErrorText = "Password must match",
+            onValidateUsername = {},
+            onValidatePassword = {},
+            onValidateEmail = {},
+            onValidateRepeatPassword = {},
             modifier = Modifier.rootModifier(innerPadding = PaddingValues(0.dp))
         )
     }

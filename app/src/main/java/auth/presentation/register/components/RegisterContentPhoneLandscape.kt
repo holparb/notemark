@@ -34,7 +34,15 @@ fun RegisterContentPhoneLandscape(
     onCreateAccountClick: () -> Unit,
     onLoginLinkClick: () -> Unit,
     createAccountButtonEnabled: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    usernameErrorText: String? = null,
+    emailErrorText: String? = null,
+    passwordErrorText: String? = null,
+    repeatPasswordErrorText: String? = null,
+    onValidateUsername: () -> Unit,
+    onValidateEmail: () -> Unit,
+    onValidatePassword: () -> Unit,
+    onValidateRepeatPassword: () -> Unit,
 ) {
     Row(
         modifier = modifier
@@ -61,6 +69,14 @@ fun RegisterContentPhoneLandscape(
             onCreateAccountClick = onCreateAccountClick,
             onLoginLinkClick = onLoginLinkClick,
             createAccountButtonEnabled = createAccountButtonEnabled,
+            usernameErrorText = usernameErrorText,
+            emailErrorText = emailErrorText,
+            passwordErrorText = passwordErrorText,
+            repeatPasswordErrorText = repeatPasswordErrorText,
+            onValidateUsername = onValidateUsername,
+            onValidateEmail = onValidateEmail,
+            onValidatePassword = onValidatePassword,
+            onValidateRepeatPassword = onValidateRepeatPassword,
             modifier = Modifier
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
@@ -89,6 +105,14 @@ private fun RegisterContentPhoneLandscapePreview() {
             isRepeatPasswordValid = true,
             isEmailValid = true,
             createAccountButtonEnabled = true,
+            usernameErrorText = "Username invalid",
+            passwordErrorText = "Password invalid",
+            emailErrorText = "Email invalid",
+            repeatPasswordErrorText = "Password must match",
+            onValidateUsername = {},
+            onValidatePassword = {},
+            onValidateEmail = {},
+            onValidateRepeatPassword = {},
             modifier = Modifier.rootModifier(innerPadding = PaddingValues(0.dp))
         )
     }

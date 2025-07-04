@@ -16,4 +16,9 @@
     <string name="sign_in_link_text">Already have an account?</string>
     <string name="hide_password">Hide password</string>
     <string name="show_password">Show password</string>
+    <string name="username_short_than_3_characters">Username must be at least 3 characters</string>
+    <string name="username_longer_than_20_characters">Username can’t be longer than 20 characters</string>
+    <string name="invalid_email_provided">Invalid email provided</string>
+    <string name="password_validation_error">Password must be at least 8 characters and\ninclude a number or symbol</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
 </resources>

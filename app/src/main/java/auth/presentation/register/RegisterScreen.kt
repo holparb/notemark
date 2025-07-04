@@ -85,6 +85,22 @@ fun RegisterScreen(
                     },
                     onCreateAccountClick = {
                         onAction(RegisterAction.OnCreateAccountClick)
+                    },
+                    usernameErrorText = state.usernameErrorMessage,
+                    emailErrorText = state.emailErrorMessage,
+                    passwordErrorText = state.passwordErrorMessage,
+                    repeatPasswordErrorText = state.repeatPasswordErrorMessage,
+                    onValidateUsername = {
+                        onAction(RegisterAction.OnValidateUsername)
+                    },
+                    onValidateEmail = {
+                        onAction(RegisterAction.OnValidateEmail)
+                    },
+                    onValidatePassword = {
+                        onAction(RegisterAction.OnValidatePassword)
+                    },
+                    onValidateRepeatPassword = {
+                        onAction(RegisterAction.OnValidateRepeatPassword)
                     }
                 )
             }
@@ -117,6 +133,22 @@ fun RegisterScreen(
                     },
                     onCreateAccountClick = {
                         onAction(RegisterAction.OnCreateAccountClick)
+                    },
+                    usernameErrorText = state.usernameErrorMessage,
+                    emailErrorText = state.emailErrorMessage,
+                    passwordErrorText = state.passwordErrorMessage,
+                    repeatPasswordErrorText = state.repeatPasswordErrorMessage,
+                    onValidateUsername = {
+                        onAction(RegisterAction.OnValidateUsername)
+                    },
+                    onValidateEmail = {
+                        onAction(RegisterAction.OnValidateEmail)
+                    },
+                    onValidatePassword = {
+                        onAction(RegisterAction.OnValidatePassword)
+                    },
+                    onValidateRepeatPassword = {
+                        onAction(RegisterAction.OnValidateRepeatPassword)
                     }
                 )
             }
@@ -154,6 +186,22 @@ fun RegisterScreen(
                     },
                     onCreateAccountClick = {
                         onAction(RegisterAction.OnCreateAccountClick)
+                    },
+                    usernameErrorText = state.usernameErrorMessage,
+                    emailErrorText = state.emailErrorMessage,
+                    passwordErrorText = state.passwordErrorMessage,
+                    repeatPasswordErrorText = state.repeatPasswordErrorMessage,
+                    onValidateUsername = {
+                        onAction(RegisterAction.OnValidateUsername)
+                    },
+                    onValidateEmail = {
+                        onAction(RegisterAction.OnValidateEmail)
+                    },
+                    onValidatePassword = {
+                        onAction(RegisterAction.OnValidatePassword)
+                    },
+                    onValidateRepeatPassword = {
+                        onAction(RegisterAction.OnValidateRepeatPassword)
                     }
                 )
             }

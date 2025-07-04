@@ -42,7 +42,15 @@ fun RegisterFormSection(
     onCreateAccountClick: () -> Unit,
     onLoginLinkClick: () -> Unit,
     createAccountButtonEnabled: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    usernameErrorText: String? = null,
+    emailErrorText: String? = null,
+    passwordErrorText: String? = null,
+    repeatPasswordErrorText: String? = null,
+    onValidateUsername: () -> Unit,
+    onValidateEmail: () -> Unit,
+    onValidatePassword: () -> Unit,
+    onValidateRepeatPassword: () -> Unit,
 ) {
     var isUsernameInputFocused by remember {
         mutableStateOf(false)
@@ -71,10 +79,14 @@ fun RegisterFormSection(
             supportingText = stringResource(R.string.registration_username_supporting_text),
             hintText = stringResource(R.string.registration_username_hint),
             labelText = stringResource(R.string.username),
-            isError = !isUsernameValid && !isUsernameInputFocused,
+            isError = usernameText.isNotBlank() && !isUsernameValid && !isUsernameInputFocused,
+            errorText = usernameErrorText,
             isSupportingTextVisible = isUsernameInputFocused,
             modifier = Modifier.onFocusChanged { focusState ->
                 isUsernameInputFocused = focusState.isFocused
+                if(!focusState.isFocused) {
+                    onValidateUsername()
+                }
             },
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next
@@ -91,9 +103,13 @@ fun RegisterFormSection(
             onTextValueChange = onEmailChange,
             hintText = stringResource(R.string.registration_email_hint),
             labelText = stringResource(R.string.email),
-            isError = !isEmailValid && !isEmalInputFocused,
+            isError = emailText.isNotBlank() && !isEmailValid && !isEmalInputFocused,
+            errorText = emailErrorText,
             modifier = Modifier.onFocusChanged { focusState ->
                 isEmalInputFocused = focusState.isFocused
+                if(!focusState.isFocused) {
+                    onValidateEmail()
+                }
             },
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next
@@ -111,10 +127,14 @@ fun RegisterFormSection(
             supportingText = stringResource(R.string.registration_password_supporting_text),
             hintText = stringResource(R.string.password),
             labelText = stringResource(R.string.password),
-            isError = !isPasswordValid && !isPasswordInputFocused,
+            isError = passwordText.isNotBlank() && !isPasswordValid && !isPasswordInputFocused,
+            errorText = passwordErrorText,
             isSupportingTextVisible = isPasswordInputFocused,
             modifier = Modifier.onFocusChanged { focusState ->  
                 isPasswordInputFocused = focusState.isFocused
+                if(!focusState.isFocused) {
+                    onValidatePassword()
+                }
             },
             isInputSecret = true,
             keyboardOptions = KeyboardOptions(
@@ -132,9 +152,13 @@ fun RegisterFormSection(
             onTextValueChange = onRepeatPasswordChange,
             hintText = stringResource(R.string.password),
             labelText = stringResource(R.string.repeat_password),
-            isError = !isRepeatPasswordValid && !isRepeatPasswordInputFocused,
+            isError = repeatPasswordText.isNotBlank() && !isRepeatPasswordValid && !isRepeatPasswordInputFocused,
+            errorText = repeatPasswordErrorText,
             modifier = Modifier.onFocusChanged { focusState ->
                 isRepeatPasswordInputFocused = focusState.isFocused
+                if(!focusState.isFocused) {
+                    onValidateRepeatPassword()
+                }
             },
             isInputSecret = true,
             keyboardOptions = KeyboardOptions(
@@ -181,7 +205,15 @@ private fun RegisterFormSectionPreview() {
             isUsernameValid = true,
             isRepeatPasswordValid = true,
             isEmailValid = true,
-            createAccountButtonEnabled = true
+            createAccountButtonEnabled = true,
+            usernameErrorText = "Username invalid",
+            passwordErrorText = "Password invalid",
+            emailErrorText = "Email invalid",
+            repeatPasswordErrorText = "Password must match",
+            onValidateUsername = {},
+            onValidatePassword = {},
+            onValidateEmail = {},
+            onValidateRepeatPassword = {}
         )
     }
 }
