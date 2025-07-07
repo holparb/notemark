@@ -1,5 +1,6 @@
 package auth.presentation.register
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
@@ -12,6 +13,7 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -21,14 +23,35 @@ import auth.presentation.register.components.RegisterContentPhonePortrait
 import auth.presentation.register.components.RegisterContentTablet
 import com.holparb.notemark.core.presentation.designsystem.theme.NoteMarkTheme
 import com.holparb.notemark.core.presentation.util.DeviceConfiguration
+import com.holparb.notemark.core.presentation.util.ObserveAsEvents
+import com.holparb.notemark.core.presentation.util.toString
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun RegisterRoot(
     viewModel: RegisterViewModel = koinViewModel<RegisterViewModel>(),
-    navigateToLogin: () -> Unit
+    navigateToLogin: () -> Unit,
+    navigateToNoteList: (String) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    val context = LocalContext.current
+    ObserveAsEvents(viewModel.events) { event ->
+        when(event) {
+            is RegisterEvent.Failed -> {
+                Toast.makeText(
+                    context,
+                    event.error.toString(context),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+
+            RegisterEvent.Success -> {
+                navigateToNoteList(state.username)
+            }
+        }
+
+    }
 
     RegisterScreen(
         state = state,
@@ -101,7 +124,8 @@ fun RegisterScreen(
                     },
                     onValidateRepeatPassword = {
                         onAction(RegisterAction.OnValidateRepeatPassword)
-                    }
+                    },
+                    isLoading = state.isLoading
                 )
             }
             DeviceConfiguration.PHONE_LANDSCAPE -> {
@@ -149,7 +173,8 @@ fun RegisterScreen(
                     },
                     onValidateRepeatPassword = {
                         onAction(RegisterAction.OnValidateRepeatPassword)
-                    }
+                    },
+                    isLoading = state.isLoading
                 )
             }
             DeviceConfiguration.TABLET_PORTRAIT,
@@ -202,7 +227,8 @@ fun RegisterScreen(
                     },
                     onValidateRepeatPassword = {
                         onAction(RegisterAction.OnValidateRepeatPassword)
-                    }
+                    },
+                    isLoading = state.isLoading
                 )
             }
             DeviceConfiguration.UNKNOWN -> Unit

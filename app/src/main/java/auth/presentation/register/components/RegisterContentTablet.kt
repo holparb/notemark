@@ -38,6 +38,7 @@ fun RegisterContentTablet(
     onValidateEmail: () -> Unit,
     onValidatePassword: () -> Unit,
     onValidateRepeatPassword: () -> Unit,
+    isLoading: Boolean
 ) {
     Column(
         modifier = modifier.padding(horizontal = 120.dp, vertical = 100.dp),
@@ -67,7 +68,8 @@ fun RegisterContentTablet(
             onValidateEmail = onValidateEmail,
             onValidatePassword = onValidatePassword,
             onValidateRepeatPassword = onValidateRepeatPassword,
-            createAccountButtonEnabled = createAccountButtonEnabled
+            createAccountButtonEnabled = createAccountButtonEnabled,
+            isLoading = isLoading
         )
     }
 }
@@ -100,7 +102,8 @@ private fun RegisterContentTabletPortraitPreview() {
             onValidatePassword = {},
             onValidateEmail = {},
             onValidateRepeatPassword = {},
-            modifier = Modifier.rootModifier(innerPadding = PaddingValues(0.dp))
+            modifier = Modifier.rootModifier(innerPadding = PaddingValues(0.dp)),
+            isLoading = false
         )
     }
 }
@@ -133,7 +136,8 @@ private fun RegisterContentTabletLandscapePreview() {
             onValidatePassword = {},
             onValidateEmail = {},
             onValidateRepeatPassword = {},
-            modifier = Modifier.rootModifier(innerPadding = PaddingValues(0.dp))
+            modifier = Modifier.rootModifier(innerPadding = PaddingValues(0.dp)),
+            isLoading = false
         )
     }
 }

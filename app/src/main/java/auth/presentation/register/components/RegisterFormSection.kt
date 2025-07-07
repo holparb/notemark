@@ -51,6 +51,7 @@ fun RegisterFormSection(
     onValidateEmail: () -> Unit,
     onValidatePassword: () -> Unit,
     onValidateRepeatPassword: () -> Unit,
+    isLoading: Boolean
 ) {
     var isUsernameInputFocused by remember {
         mutableStateOf(false)
@@ -175,7 +176,8 @@ fun RegisterFormSection(
             text = stringResource(R.string.create_account),
             onClick = onCreateAccountClick,
             modifier = Modifier.fillMaxWidth(),
-            enabled = createAccountButtonEnabled
+            enabled = createAccountButtonEnabled,
+            isLoading = isLoading
         )
         Spacer(modifier = Modifier.height(24.dp))
         TextLink(
@@ -213,7 +215,8 @@ private fun RegisterFormSectionPreview() {
             onValidateUsername = {},
             onValidatePassword = {},
             onValidateEmail = {},
-            onValidateRepeatPassword = {}
+            onValidateRepeatPassword = {},
+            isLoading = false
         )
     }
 }

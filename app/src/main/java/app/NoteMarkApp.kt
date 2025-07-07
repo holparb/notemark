@@ -6,6 +6,7 @@ import auth.di.authModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import notes.di.notesModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -19,7 +20,8 @@ class NoteMarkApp: Application() {
             androidContext(this@NoteMarkApp)
             modules(
                 appModule,
-                authModule
+                authModule,
+                notesModule
             )
         }
     }

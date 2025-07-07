@@ -3,16 +3,23 @@ package auth.presentation.register
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import auth.domain.form_validator.RegistrationFormValidator
+import auth.domain.repository.AuthRepository
+import com.holparb.notemark.core.domain.result.onError
+import com.holparb.notemark.core.domain.result.onSuccess
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class RegisterViewModel(
-    private val registrationFormValidator: RegistrationFormValidator
+    private val registrationFormValidator: RegistrationFormValidator,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
@@ -30,6 +37,9 @@ class RegisterViewModel(
             started = SharingStarted.WhileSubscribed(5_000L),
             initialValue = RegisterState()
         )
+
+    private val _events = Channel<RegisterEvent>()
+    val events = _events.receiveAsFlow()
 
     private val _isUsernameValid = MutableStateFlow(false)
     private val _isEmailValid = MutableStateFlow(false)
@@ -117,37 +127,51 @@ class RegisterViewModel(
 
     private fun onUsernameChange(text: String) {
         _state.update {
-            it.copy(
-                username = text,
-            )
+            it.copy(username = text)
         }
     }
 
     private fun onRepeatPasswordChange(text: String) {
         _state.update {
-            it.copy(
-                repeatPassword = text
-            )
+            it.copy(repeatPassword = text)
         }
     }
 
     private fun onPasswordChange(text: String) {
         _state.update {
-            it.copy(
-                password = text,
-            )
+            it.copy(password = text)
         }
     }
 
     private fun onEmailChange(text: String) {
         _state.update {
-            it.copy(
-                email = text,
-            )
+            it.copy(email = text)
         }
     }
 
     private fun createAccount() {
-        TODO("Not yet implemented")
+        _state.update {
+            it.copy(isLoading = true)
+        }
+
+        viewModelScope.launch {
+            authRepository.registerUser(
+                username = state.value.username,
+                email = state.value.email,
+                password = state.value.password
+            )
+                .onSuccess {
+                    _state.update {
+                        it.copy(isLoading = false)
+                    }
+                    _events.send(RegisterEvent.Success)
+                }
+                .onError { error ->
+                    _state.update {
+                        it.copy(isLoading = false)
+                    }
+                    _events.send(RegisterEvent.Failed(error))
+                }
+        }
     }
 }

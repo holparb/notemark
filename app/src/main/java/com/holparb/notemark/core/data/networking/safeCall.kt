@@ -15,7 +15,7 @@ suspend inline fun<reified T> safeCall(
         execute()
     }
     catch(e: UnresolvedAddressException) {
-        return Result.Error(NetworkError.NO_INTERNET_CONNECTION)
+        return Result.Error(NetworkError.CONNECTION_FAILED)
     }
     catch (e: SerializationException) {
         return Result.Error(NetworkError.SERIALIZATION)

@@ -40,6 +40,7 @@ fun RegisterContentPhonePortrait(
     onValidateEmail: () -> Unit,
     onValidatePassword: () -> Unit,
     onValidateRepeatPassword: () -> Unit,
+    isLoading: Boolean
 ) {
     Column(
         modifier = modifier
@@ -74,7 +75,8 @@ fun RegisterContentPhonePortrait(
             onValidateEmail = onValidateEmail,
             onValidatePassword = onValidatePassword,
             onValidateRepeatPassword = onValidateRepeatPassword,
-            createAccountButtonEnabled = createAccountButtonEnabled
+            createAccountButtonEnabled = createAccountButtonEnabled,
+            isLoading = isLoading
         )
     }
 }
@@ -107,7 +109,8 @@ private fun RegisterContentPhonePortraitPreview() {
             onValidatePassword = {},
             onValidateEmail = {},
             onValidateRepeatPassword = {},
-            modifier = Modifier.rootModifier(innerPadding = PaddingValues(0.dp))
+            modifier = Modifier.rootModifier(innerPadding = PaddingValues(0.dp)),
+            isLoading = false
         )
     }
 }

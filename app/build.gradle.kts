@@ -23,7 +23,7 @@ android {
 
         val properties = Properties()
         properties.load(project.rootProject.file("local.properties").inputStream())
-        buildConfigField("String", "API_ACCESS_TOKEN", "\"${properties.getProperty("API_ACCESS_TOKEN")}\"")
+        buildConfigField("String", "USER_EMAIL", "\"${properties.getProperty("USER_EMAIL")}\"")
     }
 
     buildTypes {

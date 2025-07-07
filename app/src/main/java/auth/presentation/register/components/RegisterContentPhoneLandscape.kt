@@ -43,6 +43,7 @@ fun RegisterContentPhoneLandscape(
     onValidateEmail: () -> Unit,
     onValidatePassword: () -> Unit,
     onValidateRepeatPassword: () -> Unit,
+    isLoading: Boolean
 ) {
     Row(
         modifier = modifier
@@ -79,7 +80,8 @@ fun RegisterContentPhoneLandscape(
             onValidateRepeatPassword = onValidateRepeatPassword,
             modifier = Modifier
                 .weight(1f)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()),
+            isLoading = isLoading
         )
     }
 }
@@ -113,7 +115,8 @@ private fun RegisterContentPhoneLandscapePreview() {
             onValidatePassword = {},
             onValidateEmail = {},
             onValidateRepeatPassword = {},
-            modifier = Modifier.rootModifier(innerPadding = PaddingValues(0.dp))
+            modifier = Modifier.rootModifier(innerPadding = PaddingValues(0.dp)),
+            isLoading = false
         )
     }
 }
