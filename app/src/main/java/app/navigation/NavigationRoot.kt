@@ -4,9 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import auth.presentation.landing.LandingScreen
 import auth.presentation.login.LoginRoot
 import auth.presentation.register.RegisterRoot
+import notes.presentation.note_list.NoteListRoot
 
 @Composable
 fun NavigationRoot(
@@ -14,19 +16,44 @@ fun NavigationRoot(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavigationRoute.Landing
+        startDestination = NavigationGroup.Auth
     ) {
-        composable<NavigationRoute.Landing> {
-            LandingScreen(
-                onNavigateToLogin = { navController.navigate(NavigationRoute.Login) },
-                onNavigateToRegister = { navController.navigate(NavigationRoute.Register) }
-            )
+        navigation<NavigationGroup.Auth>(
+            startDestination = NavigationRoute.Landing
+        ) {
+            composable<NavigationRoute.Landing> {
+                LandingScreen(
+                    navigateToLogin = {
+                        navController.navigate(NavigationRoute.Login) {
+                            popUpTo(NavigationRoute.Landing) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        }
+                    },
+                    navigateToRegister = {
+                        navController.navigate(NavigationRoute.Register) {
+                            popUpTo(NavigationRoute.Landing) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        }
+                    }
+                )
+            }
+            composable<NavigationRoute.Login> {
+                LoginRoot()
+            }
+            composable<NavigationRoute.Register> {
+                RegisterRoot(
+                    navigateToLogin = {
+                        navController.navigate(NavigationRoute.Login)
+                    }
+                )
+            }
         }
-        composable<NavigationRoute.Login> {
-            LoginRoot()
-        }
-        composable<NavigationRoute.Register> {
-            RegisterRoot()
+        composable<NavigationRoute.NoteList> {
+            NoteListRoot()
         }
     }
 }

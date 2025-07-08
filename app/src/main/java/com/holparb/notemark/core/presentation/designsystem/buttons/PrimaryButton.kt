@@ -1,12 +1,16 @@
 package com.holparb.notemark.core.presentation.designsystem.buttons
 
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,10 +29,11 @@ fun PrimaryButton(
     modifier: Modifier = Modifier,
     leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    isLoading: Boolean = false
 ) {
     Button (
-        modifier = modifier,
+        modifier = modifier.height(IntrinsicSize.Max),
         onClick = onClick,
         contentPadding = PaddingValues(horizontal = 20.dp, vertical = 10.dp),
         enabled = enabled,
@@ -51,11 +56,17 @@ fun PrimaryButton(
         if(leadingIcon != null) {
             Spacer(modifier = Modifier.width(6.dp))
         }
-
-        Text(
-            text = text,
-            style = MaterialTheme.typography.titleSmall
-        )
+        if(isLoading) {
+            CircularProgressIndicator(
+                color = MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier.size(24.dp)
+            )
+        } else {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.titleSmall
+            )
+        }
 
         if(trailingIcon != null) {
             Spacer(modifier = Modifier.width(6.dp))
@@ -84,7 +95,8 @@ private fun PrimaryButtonPreview() {
                 )
             },
             enabled = true,
-            onClick = {}
+            onClick = {},
+            isLoading = true
         )
     }
 }

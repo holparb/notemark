@@ -6,30 +6,61 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.holparb.notemark.R
+import com.holparb.notemark.core.presentation.designsystem.theme.Eye
+import com.holparb.notemark.core.presentation.designsystem.theme.EyeOff
 import com.holparb.notemark.core.presentation.designsystem.theme.NoteMarkTheme
 
 @Composable
-fun MainTextInput(
+fun NoteMarkTextInput(
     text: String,
-    supportingText: String,
-    hintText: String,
     labelText: String,
     onTextValueChange: (String) -> Unit,
     isError: Boolean,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    supportingText: String? = null,
+    errorText: String? = null,
+    isSupportingTextVisible: Boolean = false,
+    hintText: String? = null,
+    enabled: Boolean = true,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    singleLine: Boolean = true,
+    isInputSecret: Boolean = false,
 ) {
+    var showText by remember {
+        mutableStateOf(false)
+    }
+
+    val supportingTextText = if(isError && errorText != null) {
+        errorText
+    } else {
+        supportingText
+    }
+
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.Start,
@@ -54,18 +85,54 @@ fun MainTextInput(
             shape = RoundedCornerShape(12.dp),
             colors = noteMarkTextFieldColors(),
             placeholder = {
-                Text(
-                    text = hintText,
-                    style = MaterialTheme.typography.bodyLarge
-                )
+                if(hintText != null) {
+                    Text(
+                        text = hintText,
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    )
+                }
             },
             supportingText = {
-                Text(
-                    text = supportingText,
-                    style = MaterialTheme.typography.bodySmall
-                )
+                if((supportingText != null && isSupportingTextVisible) || (errorText != null && isError)) {
+                    Text(
+                        text = supportingTextText ?: "",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
             },
             isError = isError,
+            keyboardActions = keyboardActions,
+            keyboardOptions = keyboardOptions,
+            singleLine = singleLine,
+            trailingIcon = {
+                if(isInputSecret) {
+                    IconButton(
+                        onClick = {
+                            showText = !showText
+                        }
+                    ) {
+                        Icon(
+                            imageVector = if (showText) {
+                                Icons.Outlined.EyeOff
+                            } else {
+                                Icons.Outlined.Eye
+                            },
+                            contentDescription = if (showText) {
+                                stringResource(R.string.hide_password)
+                            } else {
+                                stringResource(R.string.show_password)
+                            }
+                        )
+                    }
+                }
+            },
+            visualTransformation = if(isInputSecret && !showText) {
+                PasswordVisualTransformation('*')
+            } else {
+                VisualTransformation.None
+            }
         )
     }
 }
@@ -98,7 +165,7 @@ fun noteMarkTextFieldColors(): TextFieldColors {
 @Composable
 private fun MainTextInputPreview() {
     NoteMarkTheme {
-        MainTextInput(
+        NoteMarkTextInput(
             text = "Input",
             onTextValueChange = {},
             supportingText = "Supporting text",
