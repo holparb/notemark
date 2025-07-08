@@ -10,7 +10,8 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LoginRoot(
-    viewModel: LoginViewModel = koinViewModel<LoginViewModel>()
+    viewModel: LoginViewModel = koinViewModel<LoginViewModel>(),
+    navigateToCreateAccount: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 

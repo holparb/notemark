@@ -78,7 +78,7 @@ fun RegisterFormSection(
             text = usernameText,
             onTextValueChange = onUsernameChange,
             supportingText = stringResource(R.string.registration_username_supporting_text),
-            hintText = stringResource(R.string.registration_username_hint),
+            hintText = stringResource(R.string.username_hint),
             labelText = stringResource(R.string.username),
             isError = usernameText.isNotBlank() && !isUsernameValid && !isUsernameInputFocused,
             errorText = usernameErrorText,
@@ -102,7 +102,7 @@ fun RegisterFormSection(
         NoteMarkTextInput(
             text = emailText,
             onTextValueChange = onEmailChange,
-            hintText = stringResource(R.string.registration_email_hint),
+            hintText = stringResource(R.string.email_hint),
             labelText = stringResource(R.string.email),
             isError = emailText.isNotBlank() && !isEmailValid && !isEmalInputFocused,
             errorText = emailErrorText,

@@ -1,6 +1,9 @@
 package auth.presentation.login
 
 data class LoginState(
-    val paramOne: String = "default",
-    val paramTwo: List<String> = emptyList(),
+    val email: String = "",
+    val isEmailValid: Boolean = false,
+    val emailErrorMessage: String = "",
+    val password: String = "",
+    val isLoginFormValid: Boolean = false
 )

@@ -31,7 +31,7 @@ fun NavigationRoot(
                             launchSingleTop = true
                         }
                     },
-                    navigateToRegister = {
+                    navigateToCreateAccount = {
                         navController.navigate(NavigationRoute.Register) {
                             popUpTo(NavigationRoute.Landing) {
                                 inclusive = true
@@ -42,7 +42,11 @@ fun NavigationRoot(
                 )
             }
             composable<NavigationRoute.Login> {
-                LoginRoot()
+                LoginRoot(
+                    navigateToCreateAccount = {
+                        navController.navigate(NavigationRoute.Register)
+                    }
+                )
             }
             composable<NavigationRoute.Register> {
                 RegisterRoot(

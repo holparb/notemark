@@ -2,12 +2,15 @@ package auth.presentation.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import auth.domain.form_validator.LoginFormValidator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(
+    private val loginFormValidator: LoginFormValidator
+) : ViewModel() {
 
     private var hasLoadedInitialData = false
 
@@ -27,7 +30,12 @@ class LoginViewModel : ViewModel() {
 
     fun onAction(action: LoginAction) {
         when (action) {
-            else -> TODO("Handle actions")
+            is LoginAction.OnEmailChange -> TODO()
+            LoginAction.OnLoginClick -> TODO()
+            is LoginAction.OnPasswordChange -> TODO()
+            is LoginAction.ValidateEmail -> TODO()
+            is LoginAction.ValidatePassword -> TODO()
+            LoginAction.OnCreateAccountLinkClick -> Unit
         }
     }
 

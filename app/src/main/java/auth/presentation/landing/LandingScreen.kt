@@ -23,7 +23,7 @@ import com.holparb.notemark.core.presentation.util.DeviceConfiguration
 @Composable
 fun LandingScreen(
     navigateToLogin: () -> Unit,
-    navigateToRegister: () -> Unit
+    navigateToCreateAccount: () -> Unit
 ) {
     val deviceConfiguration = DeviceConfiguration.fromWindowSizeClass(
        currentWindowAdaptiveInfo().windowSizeClass
@@ -37,7 +37,7 @@ fun LandingScreen(
             DeviceConfiguration.PHONE_PORTRAIT -> {
                 LandingContentPhonePortrait(
                     onLoginClick = navigateToLogin,
-                    onRegisterClick = navigateToRegister,
+                    onRegisterClick = navigateToCreateAccount,
                     modifier = Modifier.padding(
                         start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
                         end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
@@ -49,7 +49,7 @@ fun LandingScreen(
             DeviceConfiguration.PHONE_LANDSCAPE -> {
                 LandingContentPhoneLandscape(
                     onLoginClick = navigateToLogin,
-                    onRegisterClick = navigateToRegister,
+                    onRegisterClick = navigateToCreateAccount,
                     modifier = Modifier.padding(
                         start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
                         end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
@@ -61,7 +61,7 @@ fun LandingScreen(
             DeviceConfiguration.TABLET_PORTRAIT -> {
                 LandingContentTabletPortrait(
                     onLoginClick = navigateToLogin,
-                    onRegisterClick = navigateToRegister,
+                    onRegisterClick = navigateToCreateAccount,
                     modifier = Modifier.padding(
                         start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
                         end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
@@ -73,7 +73,7 @@ fun LandingScreen(
             DeviceConfiguration.TABLET_LANDSCAPE-> {
                 LandingContentTabletLandscape(
                     onLoginClick = navigateToLogin,
-                    onRegisterClick = navigateToRegister,
+                    onRegisterClick = navigateToCreateAccount,
                     modifier = Modifier.padding(
                         start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
                         end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
@@ -93,7 +93,7 @@ fun LandingScreen(
 private fun LandingScreenPreview() {
     NoteMarkTheme {
         LandingScreen(
-            navigateToRegister = {},
+            navigateToCreateAccount = {},
             navigateToLogin = {}
         )
     }
@@ -104,7 +104,7 @@ private fun LandingScreenPreview() {
 private fun LandingContentLandscapePreview() {
     NoteMarkTheme {
         LandingScreen(
-            navigateToRegister = {},
+            navigateToCreateAccount = {},
             navigateToLogin = {}
         )
     }
@@ -115,7 +115,7 @@ private fun LandingContentLandscapePreview() {
 private fun LandingContentTabletPreview() {
     NoteMarkTheme {
         LandingScreen(
-            navigateToRegister = {},
+            navigateToCreateAccount = {},
             navigateToLogin = {}
         )
     }
@@ -126,7 +126,7 @@ private fun LandingContentTabletPreview() {
 private fun LandingContentTabletLandscapePreview() {
     NoteMarkTheme {
         LandingScreen(
-            navigateToRegister = {},
+            navigateToCreateAccount = {},
             navigateToLogin = {}
         )
     }
