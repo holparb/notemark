@@ -21,6 +21,7 @@ import auth.presentation.components.rootModifier
 import auth.presentation.register.components.RegisterContentPhoneLandscape
 import auth.presentation.register.components.RegisterContentPhonePortrait
 import auth.presentation.register.components.RegisterContentTablet
+import com.holparb.notemark.R
 import com.holparb.notemark.core.presentation.designsystem.theme.NoteMarkTheme
 import com.holparb.notemark.core.presentation.util.DeviceConfiguration
 import com.holparb.notemark.core.presentation.util.ObserveAsEvents
@@ -30,8 +31,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun RegisterRoot(
     viewModel: RegisterViewModel = koinViewModel<RegisterViewModel>(),
-    navigateToLogin: () -> Unit,
-    navigateToNoteList: (String) -> Unit
+    navigateToLogin: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -47,7 +47,13 @@ fun RegisterRoot(
             }
 
             RegisterEvent.Success -> {
-                navigateToNoteList(state.username)
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.account_created),
+                    Toast.LENGTH_LONG
+                ).show()
+
+                navigateToLogin()
             }
         }
 

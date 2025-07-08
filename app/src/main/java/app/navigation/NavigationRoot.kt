@@ -23,8 +23,22 @@ fun NavigationRoot(
         ) {
             composable<NavigationRoute.Landing> {
                 LandingScreen(
-                    navigateToLogin = { navController.navigate(NavigationRoute.Login) },
-                    navigateToRegister = { navController.navigate(NavigationRoute.Register) }
+                    navigateToLogin = {
+                        navController.navigate(NavigationRoute.Login) {
+                            popUpTo(NavigationRoute.Landing) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        }
+                    },
+                    navigateToRegister = {
+                        navController.navigate(NavigationRoute.Register) {
+                            popUpTo(NavigationRoute.Landing) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        }
+                    }
                 )
             }
             composable<NavigationRoute.Login> {
@@ -32,9 +46,8 @@ fun NavigationRoot(
             }
             composable<NavigationRoute.Register> {
                 RegisterRoot(
-                    navigateToLogin = { navController.navigate(NavigationRoute.Login) },
-                    navigateToNoteList = { username ->
-                        navController.navigate(NavigationRoute.NoteList(username = username))
+                    navigateToLogin = {
+                        navController.navigate(NavigationRoute.Login)
                     }
                 )
             }
