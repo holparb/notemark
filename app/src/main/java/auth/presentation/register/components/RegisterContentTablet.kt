@@ -3,13 +3,17 @@ package auth.presentation.register.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import auth.presentation.components.AuthHeaderSection
 import auth.presentation.components.rootModifier
+import com.holparb.notemark.R
 import com.holparb.notemark.core.presentation.designsystem.theme.NoteMarkTheme
 
 @Composable
@@ -44,7 +48,12 @@ fun RegisterContentTablet(
         modifier = modifier.padding(horizontal = 120.dp, vertical = 100.dp),
         verticalArrangement = Arrangement.spacedBy(32.dp)
     ) {
-        RegisterHeaderSection()
+        AuthHeaderSection(
+            mainText = stringResource(R.string.create_account),
+            subText = stringResource(R.string.capture_your_thoughts_and_ideas),
+            centerText = true,
+            modifier = Modifier.fillMaxWidth()
+        )
         RegisterFormSection(
             usernameText = usernameText,
             onUsernameChange = onUsernameChange,

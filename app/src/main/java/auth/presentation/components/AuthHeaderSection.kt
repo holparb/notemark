@@ -1,4 +1,4 @@
-package auth.presentation.register.components
+package auth.presentation.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -6,27 +6,34 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.holparb.notemark.R
 import com.holparb.notemark.core.presentation.designsystem.theme.NoteMarkTheme
 
 @Composable
-fun RegisterHeaderSection(
-    modifier: Modifier = Modifier
+fun AuthHeaderSection(
+    mainText: String,
+    subText: String,
+    modifier: Modifier = Modifier,
+    centerText: Boolean = false
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier,
+        horizontalAlignment = if(centerText) {
+            Alignment.CenterHorizontally
+        } else {
+            Alignment.Start
+        }
     ) {
         Text(
-            text = stringResource(R.string.create_account),
+            text = mainText,
             style = MaterialTheme.typography.titleLarge
         )
         Spacer(modifier = Modifier.height(6.dp))
         Text(
-            text = stringResource(R.string.capture_your_thoughts_and_ideas),
+            text = subText,
             style = MaterialTheme.typography.bodyLarge.copy(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -38,6 +45,9 @@ fun RegisterHeaderSection(
 @Composable
 private fun RegisterHeaderSectionPreview() {
     NoteMarkTheme {
-        RegisterHeaderSection()
+        AuthHeaderSection(
+            mainText = "Main Text",
+            subText = "Some additional text"
+        )
     }
 }

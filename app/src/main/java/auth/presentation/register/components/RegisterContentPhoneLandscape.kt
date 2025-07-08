@@ -11,10 +11,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import auth.presentation.components.AuthHeaderSection
 import auth.presentation.components.rootModifier
+import com.holparb.notemark.R
 import com.holparb.notemark.core.presentation.designsystem.theme.NoteMarkTheme
 
 @Composable
@@ -51,7 +54,9 @@ fun RegisterContentPhoneLandscape(
             .padding(horizontal = 40.dp, vertical = 40.dp)
             .windowInsetsPadding(WindowInsets.displayCutout)
     ) {
-        RegisterHeaderSection(
+        AuthHeaderSection(
+            mainText = stringResource(R.string.create_account),
+            subText = stringResource(R.string.capture_your_thoughts_and_ideas),
             modifier = Modifier.weight(1f)
         )
         RegisterFormSection(
