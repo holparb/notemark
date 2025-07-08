@@ -48,7 +48,7 @@ fun RegisterContentPhoneLandscape(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 32.dp, vertical = 40.dp)
+            .padding(horizontal = 40.dp, vertical = 40.dp)
             .windowInsetsPadding(WindowInsets.displayCutout)
     ) {
         RegisterHeaderSection(

@@ -3,9 +3,7 @@ package auth.presentation.register
 import android.widget.Toast
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
@@ -136,7 +134,7 @@ fun RegisterScreen(
             }
             DeviceConfiguration.PHONE_LANDSCAPE -> {
                 RegisterContentPhoneLandscape(
-                    modifier = rootModifier.windowInsetsPadding(WindowInsets.navigationBars),
+                    modifier = rootModifier,
                     usernameText = state.username,
                     onUsernameChange = {
                         onAction(RegisterAction.OnUsernameChange(it))
