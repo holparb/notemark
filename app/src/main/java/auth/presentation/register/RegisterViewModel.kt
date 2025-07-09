@@ -74,8 +74,7 @@ class RegisterViewModel(
                             && isPasswordValid && isRepeatPasswordValid
                 )
             }
-        }
-            .launchIn(viewModelScope)
+        }.launchIn(viewModelScope)
     }
 
     private fun validateUsername() {

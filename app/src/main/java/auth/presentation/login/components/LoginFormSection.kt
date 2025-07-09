@@ -32,7 +32,6 @@ fun LoginFormSection(
     passwordText: String,
     onPasswordChange: (String) -> Unit,
     isEmailValid: Boolean,
-    isPasswordValid: Boolean,
     onLoginClick: () -> Unit,
     onCreateAccountLinkClick: () -> Unit,
     onValidateEmail: () -> Unit,
@@ -40,13 +39,8 @@ fun LoginFormSection(
     loginButtonEnabled: Boolean,
     modifier: Modifier = Modifier,
     emailErrorMessage: String? = null,
-    passwordErrorMessage: String? = null,
 ) {
-    var isEmalInputFocused by remember {
-        mutableStateOf(false)
-    }
-
-    var isPasswordInputFocused by remember {
+    var isEmailInputFocused by remember {
         mutableStateOf(false)
     }
 
@@ -59,11 +53,11 @@ fun LoginFormSection(
             text = emailText,
             labelText = stringResource(R.string.email),
             onTextValueChange = onEmailChange,
-            isError = !isEmalInputFocused && !isEmailValid,
+            isError = emailText.isNotBlank() && !isEmailInputFocused && !isEmailValid,
             errorText = emailErrorMessage,
             hintText = stringResource(R.string.email_hint),
             modifier = Modifier.onFocusChanged { focusState ->
-                isEmalInputFocused = focusState.isFocused
+                isEmailInputFocused = focusState.isFocused
                 if(!focusState.isFocused) {
                     onValidateEmail()
                 }
@@ -83,10 +77,7 @@ fun LoginFormSection(
             onTextValueChange = onPasswordChange,
             hintText = stringResource(R.string.password),
             labelText = stringResource(R.string.password),
-            isError = !isPasswordValid && !isPasswordInputFocused,
-            errorText = passwordErrorMessage,
             modifier = Modifier.onFocusChanged { focusState ->
-                isPasswordInputFocused = focusState.isFocused
                 if(!focusState.isFocused) {
                     onValidatePassword()
                 }
@@ -132,8 +123,7 @@ private fun LoginFormSectionPreview() {
             onCreateAccountLinkClick = {},
             isEmailValid = false,
             emailErrorMessage = "Invalid email",
-            isPasswordValid = true,
-            loginButtonEnabled = true
+            loginButtonEnabled = true,
         )
     }
 }
