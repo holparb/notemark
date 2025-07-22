@@ -13,7 +13,7 @@ fun NetworkError.toString(context: Context): String {
         NetworkError.TOO_MANY_REQUEST -> R.string.too_many_requests
         NetworkError.CONNECTION_FAILED -> R.string.could_not_connect
         NetworkError.SERIALIZATION -> R.string.something_went_wrong
-        NetworkError.UNKNOWN -> R.string.unkown_error
+        NetworkError.UNKNOWN -> R.string.unknown_error_occurred
     }
     return context.getString(resId)
 }

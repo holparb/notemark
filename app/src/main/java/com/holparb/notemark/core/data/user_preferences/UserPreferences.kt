@@ -1,4 +1,4 @@
-package com.holparb.notemark.auth.domain.user_preferences
+package com.holparb.notemark.core.data.user_preferences
 
 import kotlinx.serialization.Serializable
 

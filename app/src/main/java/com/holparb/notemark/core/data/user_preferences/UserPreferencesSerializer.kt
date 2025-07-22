@@ -1,7 +1,6 @@
-package com.holparb.notemark.auth.data.serializers
+package com.holparb.notemark.core.data.user_preferences
 
 import androidx.datastore.core.Serializer
-import com.holparb.notemark.auth.domain.user_preferences.UserPreferences
 import com.holparb.notemark.core.data.crypto.Crypto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

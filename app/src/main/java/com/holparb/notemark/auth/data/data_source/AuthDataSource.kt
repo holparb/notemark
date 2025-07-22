@@ -1,6 +1,6 @@
 package com.holparb.notemark.auth.data.data_source
 
-import com.holparb.notemark.auth.domain.user_preferences.UserPreferences
+import com.holparb.notemark.core.data.user_preferences.UserPreferences
 import com.holparb.notemark.core.data.networking.LOGIN_ENDPOINT
 import com.holparb.notemark.core.data.networking.REGISTER_ENDPOINT
 import com.holparb.notemark.core.data.networking.constructUrl

@@ -1,6 +1,8 @@
 package com.holparb.notemark.core.data.networking
 
+import androidx.datastore.core.DataStore
 import com.holparb.notemark.BuildConfig
+import com.holparb.notemark.core.data.user_preferences.UserPreferences
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -17,7 +19,10 @@ import kotlinx.serialization.json.Json
 
 object HttpClientFactory {
 
-    fun create(engine: HttpClientEngine): HttpClient {
+    fun create(
+        engine: HttpClientEngine,
+        userPreferencesDataStore: DataStore<UserPreferences>
+    ): HttpClient {
         return HttpClient(engine) {
             install(Logging) {
                 level = LogLevel.ALL

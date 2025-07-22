@@ -1,15 +1,15 @@
 package com.holparb.notemark.auth.data.repository
 
-import androidx.datastore.core.DataStore
 import com.holparb.notemark.auth.data.data_source.AuthDataSource
 import com.holparb.notemark.auth.domain.repository.AuthRepository
-import com.holparb.notemark.auth.domain.user_preferences.UserPreferences
+import com.holparb.notemark.core.data.user_preferences.UserPreferences
+import com.holparb.notemark.core.data.user_preferences.UserPreferencesRepository
 import com.holparb.notemark.core.domain.result.NetworkError
 import com.holparb.notemark.core.domain.result.Result
 
 class AuthRepositoryImpl(
     private val authDataSource: AuthDataSource,
-    private val userPreferencesDataStore: DataStore<UserPreferences>
+    private val userPreferencesRepository: UserPreferencesRepository
 ): AuthRepository {
 
     override suspend fun registerUser(
@@ -31,7 +31,7 @@ class AuthRepositoryImpl(
     override suspend fun login(
         email: String,
         password: String
-    ): Result<UserPreferences, NetworkError> {
+    ): Result<String, NetworkError> {
         val result = authDataSource.login(
             email = email,
             password = password
@@ -39,14 +39,14 @@ class AuthRepositoryImpl(
         return when(result) {
             is Result.Error -> Result.Error(result.error)
             is Result.Success -> {
-                userPreferencesDataStore.updateData {
+                userPreferencesRepository.updateUserData(
                     UserPreferences(
                         username = result.data.username,
                         accessToken = result.data.accessToken,
                         refreshToken = result.data.refreshToken
                     )
-                }
-                Result.Success(result.data)
+                )
+                Result.Success(result.data.username!!)
             }
         }
     }

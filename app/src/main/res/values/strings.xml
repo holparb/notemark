@@ -22,12 +22,13 @@
     <string name="password_validation_error">Password must be at least 8 characters and\ninclude a number or symbol</string>
     <string name="passwords_do_not_match">Passwords do not match</string>
     <string name="too_many_requests">Too many requests, please try again later</string>
-    <string name="could_not_connect">Couldn\'t connect, please try again</string>
-    <string name="unkown_error">Unknown error occurred, please try again</string>
+    <string name="could_not_connect">Could not connect, please try again</string>
     <string name="something_went_wrong">Something went wrong, please try again</string>
     <string name="unauthorized">Please log in to perform that operation</string>
-    <string name="conflict">This entity already exists</string>
+    <string name="conflict">User with specified username or email already exists</string>
     <string name="account_created">Account successfully created</string>
     <string name="password_cannot_be_empty">Password cannot be empty</string>
     <string name="create_account_link_text">Don’t have an account?</string>
+    <string name="unknown_error_occurred">Unknown error occurred, please try again</string>
+    <string name="invalid_login_credentials">Invalid login credentials</string>
 </resources>
