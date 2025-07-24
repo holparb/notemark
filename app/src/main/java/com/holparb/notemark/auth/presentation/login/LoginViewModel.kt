@@ -3,16 +3,23 @@ package com.holparb.notemark.auth.presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.holparb.notemark.auth.domain.form_validator.LoginFormValidator
+import com.holparb.notemark.auth.domain.repository.AuthRepository
+import com.holparb.notemark.core.domain.result.onError
+import com.holparb.notemark.core.domain.result.onSuccess
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val loginFormValidator: LoginFormValidator
+    private val loginFormValidator: LoginFormValidator,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
@@ -30,6 +37,9 @@ class LoginViewModel(
             started = SharingStarted.WhileSubscribed(5_000L),
             initialValue = LoginState()
         )
+
+    private val _events = Channel<LoginEvent>()
+    val events = _events.receiveAsFlow()
 
     private val _isEmailValid = MutableStateFlow(false)
     private val _isPasswordValid = MutableStateFlow(false)
@@ -57,7 +67,27 @@ class LoginViewModel(
     }
 
     private fun login() {
-        TODO("Not yet implemented")
+        _state.update {
+            it.copy(isLoading = true)
+        }
+        viewModelScope.launch {
+            authRepository.login(
+                email = state.value.email,
+                password = state.value.password
+            )
+                .onError { error ->
+                    _state.update {
+                        it.copy(isLoading = false)
+                    }
+                    _events.send(LoginEvent.LoginError(error))
+                }
+                .onSuccess { username ->
+                    _state.update {
+                        it.copy(isLoading = false)
+                    }
+                    _events.send(LoginEvent.LoginSuccessful(username))
+                }
+        }
     }
 
     private fun validateEmail() {

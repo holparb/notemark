@@ -31,4 +31,5 @@
     <string name="create_account_link_text">Don’t have an account?</string>
     <string name="unknown_error_occurred">Unknown error occurred, please try again</string>
     <string name="invalid_login_credentials">Invalid login credentials</string>
+    <string name="try_again">Try again</string>
 </resources>

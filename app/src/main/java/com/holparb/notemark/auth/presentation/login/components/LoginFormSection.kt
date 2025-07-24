@@ -39,6 +39,7 @@ fun LoginFormSection(
     loginButtonEnabled: Boolean,
     modifier: Modifier = Modifier,
     emailErrorMessage: String? = null,
+    isLoading: Boolean
 ) {
     var isEmailInputFocused by remember {
         mutableStateOf(false)
@@ -87,17 +88,18 @@ fun LoginFormSection(
                 imeAction = ImeAction.Done
             ),
             keyboardActions = KeyboardActions(
-                onNext = {
+                onDone = {
                     focusManager.clearFocus()
                 }
             )
         )
         Spacer(modifier = Modifier.height(24.dp))
         PrimaryButton(
-            text = stringResource(R.string.create_account),
+            text = stringResource(R.string.log_in),
             onClick = onLoginClick,
             modifier = Modifier.fillMaxWidth(),
-            enabled = loginButtonEnabled
+            enabled = loginButtonEnabled,
+            isLoading = isLoading
         )
         Spacer(modifier = Modifier.height(24.dp))
         TextLink(
@@ -124,6 +126,7 @@ private fun LoginFormSectionPreview() {
             isEmailValid = false,
             emailErrorMessage = "Invalid email",
             loginButtonEnabled = true,
+            isLoading = false
         )
     }
 }

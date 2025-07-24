@@ -45,6 +45,14 @@ fun NavigationRoot(
                 LoginRoot(
                     navigateToCreateAccount = {
                         navController.navigate(NavigationRoute.Register)
+                    },
+                    navigateToNoteList = {
+                        navController.navigate(NavigationGroup.Notes) {
+                            popUpTo(NavigationGroup.Auth) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        }
                     }
                 )
             }
@@ -56,8 +64,12 @@ fun NavigationRoot(
                 )
             }
         }
-        composable<NavigationRoute.NoteList> {
-            NoteListRoot()
+        navigation<NavigationGroup.Notes>(
+            startDestination = NavigationRoute.NoteList()
+        ) {
+            composable<NavigationRoute.NoteList> {
+                NoteListRoot()
+            }
         }
     }
 }
