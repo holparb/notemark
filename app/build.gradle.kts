@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.junit5)
 }
 
 android {
@@ -14,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId = "com.holparb.notemark"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -48,6 +49,9 @@ android {
         compose = true
         buildConfig = true
     }
+    tasks.withType<Test> {
+        useJUnitPlatform() // Enables JUnit Platform (JUnit 5 + JUnit 4)
+    }
 }
 
 dependencies {
@@ -64,6 +68,9 @@ dependencies {
     // Splash Screen
     implementation(libs.androidx.core.splashscreen)
 
+    // DataStore
+    implementation(libs.androidx.datastore)
+
     // Adaptive Screen Sizes
     implementation(libs.material3.adaptive)
 
@@ -77,11 +84,17 @@ dependencies {
     // Ktor
     implementation(libs.bundles.ktor)
 
-    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // JUnit5
+    testImplementation(libs.junit5.api)
+    testRuntimeOnly(libs.junit5.engine)
+    testImplementation(libs.junit5.params)
 }

@@ -6,9 +6,9 @@
     <string name="log_in">Log In</string>
     <string name="create_account">Create account</string>
     <string name="registration_username_supporting_text">Use between 3 and 20 characters for your username</string>
-    <string name="registration_username_hint">john.doe</string>
+    <string name="username_hint">john.doe</string>
     <string name="username">Username</string>
-    <string name="registration_email_hint">john.doe@example.com</string>
+    <string name="email_hint">john.doe@example.com</string>
     <string name="email">Email</string>
     <string name="registration_password_supporting_text">Use 8+ characters with a number or symbol for better\nsecurity</string>
     <string name="password">Password</string>
@@ -22,10 +22,14 @@
     <string name="password_validation_error">Password must be at least 8 characters and\ninclude a number or symbol</string>
     <string name="passwords_do_not_match">Passwords do not match</string>
     <string name="too_many_requests">Too many requests, please try again later</string>
-    <string name="could_not_connect">Couldn\'t connect, please try again</string>
-    <string name="unkown_error">Unknown error occurred, please try again</string>
+    <string name="could_not_connect">Could not connect, please try again</string>
     <string name="something_went_wrong">Something went wrong, please try again</string>
     <string name="unauthorized">Please log in to perform that operation</string>
-    <string name="conflict">This entity already exists</string>
+    <string name="conflict">User with specified username or email already exists</string>
     <string name="account_created">Account successfully created</string>
+    <string name="password_cannot_be_empty">Password cannot be empty</string>
+    <string name="create_account_link_text">Don’t have an account?</string>
+    <string name="unknown_error_occurred">Unknown error occurred, please try again</string>
+    <string name="invalid_login_credentials">Invalid login credentials</string>
+    <string name="try_again">Try again</string>
 </resources>
