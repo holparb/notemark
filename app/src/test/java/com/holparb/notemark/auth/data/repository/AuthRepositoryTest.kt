@@ -3,7 +3,7 @@ package com.holparb.notemark.auth.data.repository
 import com.holparb.notemark.auth.data.data_source.AuthDataSource
 import com.holparb.notemark.auth.domain.repository.AuthRepository
 import com.holparb.notemark.core.data.user_preferences.UserPreferences
-import com.holparb.notemark.core.data.user_preferences.UserPreferencesRepository
+import com.holparb.notemark.core.data.user_preferences.UserPreferencesDataStore
 import com.holparb.notemark.core.domain.result.NetworkError
 import com.holparb.notemark.core.domain.result.Result
 import io.mockk.clearAllMocks
@@ -19,14 +19,14 @@ import org.junit.jupiter.api.Test
 
 class AuthRepositoryTest {
     private lateinit var authDataSource: AuthDataSource
-    private lateinit var userPreferencesRepository: UserPreferencesRepository
+    private lateinit var userPreferencesRepository: UserPreferencesDataStore
     private lateinit var authRepository: AuthRepository
 
     @BeforeEach
     fun setUp() {
         clearAllMocks()
         authDataSource = mockk()
-        userPreferencesRepository = mockk<UserPreferencesRepository>()
+        userPreferencesRepository = mockk<UserPreferencesDataStore>()
         authRepository = AuthRepositoryImpl(authDataSource, userPreferencesRepository)
     }
 

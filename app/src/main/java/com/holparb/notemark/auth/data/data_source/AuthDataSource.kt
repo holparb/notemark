@@ -2,6 +2,7 @@ package com.holparb.notemark.auth.data.data_source
 
 import com.holparb.notemark.core.data.user_preferences.UserPreferences
 import com.holparb.notemark.core.data.networking.LOGIN_ENDPOINT
+import com.holparb.notemark.core.data.networking.REFRESH_TOKEN_ENDPOINT
 import com.holparb.notemark.core.data.networking.REGISTER_ENDPOINT
 import com.holparb.notemark.core.data.networking.constructUrl
 import com.holparb.notemark.core.data.networking.safeCall
@@ -46,6 +47,22 @@ class AuthDataSource(
                     LoginBodyDto(
                         email = email,
                         password = password
+                    )
+                )
+            }
+        }
+    }
+
+    suspend fun refreshToken(
+        refreshToken: String
+    ): Result<TokenDto, NetworkError> {
+        return safeCall<TokenDto> {
+            httpClient.post(
+                urlString = constructUrl(REFRESH_TOKEN_ENDPOINT)
+            ) {
+                setBody(
+                    TokenDto(
+                        refreshToken = refreshToken
                     )
                 )
             }

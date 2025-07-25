@@ -1,10 +1,13 @@
 package com.holparb.notemark.core.data.networking
 
-import androidx.datastore.core.DataStore
 import com.holparb.notemark.BuildConfig
-import com.holparb.notemark.core.data.user_preferences.UserPreferences
+import com.holparb.notemark.auth.domain.repository.AuthRepository
+import com.holparb.notemark.core.domain.result.Result
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.plugins.auth.Auth
+import io.ktor.client.plugins.auth.providers.BearerTokens
+import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.ANDROID
@@ -21,7 +24,7 @@ object HttpClientFactory {
 
     fun create(
         engine: HttpClientEngine,
-        userPreferencesDataStore: DataStore<UserPreferences>
+        authRepository: AuthRepository,
     ): HttpClient {
         return HttpClient(engine) {
             install(Logging) {
@@ -41,6 +44,27 @@ object HttpClientFactory {
                     USER_EMAIL_HEADER,
                     BuildConfig.USER_EMAIL
                 )
+            }
+            install(Auth) {
+                bearer {
+                    loadTokens {
+                        val tokens = authRepository.getTokens()
+                        BearerTokens(
+                            accessToken = tokens.accessToken,
+                            refreshToken = tokens.refreshToken
+                        )
+                    }
+                    refreshTokens {
+                        val result = authRepository.refreshToken()
+                        when(result) {
+                            is Result.Error -> BearerTokens("", "")
+                            is Result.Success -> BearerTokens(
+                                accessToken = result.data.accessToken,
+                                refreshToken = result.data.refreshToken
+                            )
+                        }
+                    }
+                }
             }
         }
     }
