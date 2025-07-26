@@ -4,10 +4,10 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import com.holparb.notemark.app.NoteMarkApp
-import com.holparb.notemark.core.data.user_preferences.UserPreferencesSerializer
-import com.holparb.notemark.core.data.user_preferences.UserPreferences
 import com.holparb.notemark.core.data.networking.HttpClientFactory
-import com.holparb.notemark.core.data.user_preferences.UserPreferencesRepository
+import com.holparb.notemark.core.data.user_preferences.UserPreferences
+import com.holparb.notemark.core.data.user_preferences.UserPreferencesDataStore
+import com.holparb.notemark.core.data.user_preferences.UserPreferencesSerializer
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import kotlinx.coroutines.CoroutineScope
@@ -34,5 +34,5 @@ val appModule = module {
     single<HttpClient> {
         HttpClientFactory.create(CIO.create(), get())
     }
-    singleOf(::UserPreferencesRepository)
+    singleOf(::UserPreferencesDataStore)
 }
