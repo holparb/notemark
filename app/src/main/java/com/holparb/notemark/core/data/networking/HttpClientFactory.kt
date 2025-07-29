@@ -1,8 +1,9 @@
 package com.holparb.notemark.core.data.networking
 
 import com.holparb.notemark.BuildConfig
-import com.holparb.notemark.auth.domain.repository.AuthRepository
 import com.holparb.notemark.core.domain.result.Result
+import com.holparb.notemark.core.domain.session_storage.SessionData
+import com.holparb.notemark.core.domain.session_storage.SessionStorage
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.auth.Auth
@@ -15,16 +16,19 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.header
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-object HttpClientFactory {
+class HttpClientFactory(
+    private val sessionStorage: SessionStorage
+) {
 
     fun create(
-        engine: HttpClientEngine,
-        authRepository: AuthRepository,
+        engine: HttpClientEngine
     ): HttpClient {
         return HttpClient(engine) {
             install(Logging) {
@@ -48,18 +52,34 @@ object HttpClientFactory {
             install(Auth) {
                 bearer {
                     loadTokens {
-                        val tokens = authRepository.getTokens()
+                        val sessionData = sessionStorage.getSessionData()
                         BearerTokens(
-                            accessToken = tokens.accessToken,
-                            refreshToken = tokens.refreshToken
+                            accessToken = sessionData.accessToken ?: "",
+                            refreshToken = sessionData.refreshToken ?: ""
                         )
                     }
                     refreshTokens {
-                        val result = authRepository.refreshToken()
+                        val sessionData = sessionStorage.getSessionData()
+                        val result = safeCall<SessionData> {
+                            client.post(
+                                urlString = constructUrl(REFRESH_TOKEN_ENDPOINT)
+                            ) {
+                                setBody(
+                                    SessionData(
+                                        refreshToken = sessionData.refreshToken
+                                    )
+                                )
+                                markAsRefreshTokenRequest()
+                                header("Debug", true)
+                            }
+                        }
                         when(result) {
-                            is Result.Error -> BearerTokens("", "")
+                            is Result.Error -> {
+                                //TODO add logout endpoint call
+                                BearerTokens("", "")
+                            }
                             is Result.Success -> BearerTokens(
-                                accessToken = result.data.accessToken,
+                                accessToken = result.data.accessToken!!,
                                 refreshToken = result.data.refreshToken
                             )
                         }

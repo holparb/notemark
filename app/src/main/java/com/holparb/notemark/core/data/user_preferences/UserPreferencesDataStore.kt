@@ -1,40 +1,34 @@
 package com.holparb.notemark.core.data.user_preferences
 
-import androidx.datastore.core.DataStore
-import com.holparb.notemark.auth.domain.token.Token
+import android.content.Context
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import com.holparb.notemark.core.domain.user_preferences.UserPreferences
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 
 class UserPreferencesDataStore(
-    private val userPreferencesDataStore: DataStore<UserPreferences>
-) {
-    suspend fun updateUserData(userPreferences: UserPreferences) {
-       userPreferencesDataStore.updateData {
-           userPreferences
-       }
-    }
+    private val context: Context
+): UserPreferences {
 
-    suspend fun updateTokens(
-        accessToken: String,
-        refreshToken: String
-    ) {
-        userPreferencesDataStore.updateData {
-            it.copy(
-                accessToken = accessToken,
-                refreshToken = refreshToken
-            )
-        }
-    }
-
-    suspend fun getTokens(): Token {
-        val userPreferences = userPreferencesDataStore.data.first()
-        return Token(
-            accessToken = userPreferences.accessToken ?: "",
-            refreshToken = userPreferences.refreshToken ?: ""
+    companion object {
+        private  val Context.userPreferencesDatastore by preferencesDataStore(
+            name = "user_preferences"
         )
     }
 
-    suspend fun getUsername(): String {
-        return userPreferencesDataStore.data.first().username!!
+    private val usernameKey = stringPreferencesKey("username")
+
+    override suspend fun saveUsername(username: String) {
+        context.userPreferencesDatastore.edit { prefs ->
+            prefs[usernameKey] = username
+        }
     }
 
+    override suspend fun getUsername(): String {
+        return context.userPreferencesDatastore.data.map { prefs ->
+            prefs[usernameKey] ?: ""
+        }.first()
+    }
 }

@@ -45,6 +45,7 @@ material3-adaptive = { group = "org.jetbrains.compose.material3.adaptive", name 
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref="splashscreen"}
 

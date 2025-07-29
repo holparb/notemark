@@ -76,6 +76,7 @@ dependencies {
 
     // DataStore
     implementation(libs.androidx.datastore)
+    implementation(libs.androidx.datastore.preferences)
 
     // Adaptive Screen Sizes
     implementation(libs.material3.adaptive)
