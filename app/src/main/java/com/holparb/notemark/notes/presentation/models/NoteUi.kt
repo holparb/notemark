@@ -4,7 +4,7 @@ import com.holparb.notemark.core.presentation.util.toReadableDate
 import java.time.Instant
 
 data class NoteUi(
-    val id: Int,
+    val id: String,
     val title: String,
     val text: String,
     val createdAt: Instant
