@@ -33,4 +33,6 @@
     <string name="invalid_login_credentials">Invalid login credentials</string>
     <string name="try_again">Try again</string>
     <string name="note_mark">NoteMark</string>
+    <string name="empty_note_list_text">You’ve got an empty board,\nlet’s place your first note on it!</string>
+    <string name="add_note">Add note</string>
 </resources>
