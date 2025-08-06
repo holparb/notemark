@@ -65,7 +65,7 @@ fun NavigationRoot(
             }
         }
         navigation<NavigationGroup.Notes>(
-            startDestination = NavigationRoute.NoteList()
+            startDestination = NavigationRoute.NoteList
         ) {
             composable<NavigationRoute.NoteList> {
                 NoteListRoot()

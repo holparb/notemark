@@ -85,7 +85,7 @@ class LoginViewModel(
                     _state.update {
                         it.copy(isLoading = false)
                     }
-                    _events.send(LoginEvent.LoginSuccessful(username))
+                    _events.send(LoginEvent.LoginSuccessful)
                 }
         }
     }
