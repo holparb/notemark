@@ -12,11 +12,12 @@ import com.holparb.notemark.notes.presentation.note_list.NoteListRoot
 
 @Composable
 fun NavigationRoot(
-    navController: NavHostController
+    navController: NavHostController,
+    isLoggedIn: Boolean
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavigationGroup.Auth
+        startDestination = if(isLoggedIn) NavigationGroup.Notes else NavigationGroup.Auth
     ) {
         navigation<NavigationGroup.Auth>(
             startDestination = NavigationRoute.Landing

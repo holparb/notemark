@@ -1,6 +1,7 @@
 package com.holparb.notemark.app.di
 
 import com.holparb.notemark.app.NoteMarkApp
+import com.holparb.notemark.app.presentation.MainViewModel
 import com.holparb.notemark.core.data.networking.HttpClientFactory
 import com.holparb.notemark.core.data.session_storage.SessionStorageDataStore
 import com.holparb.notemark.core.data.user_preferences.UserPreferencesDataStore
@@ -21,6 +22,7 @@ val appModule = module {
     singleOf(::UserPreferencesDataStore) bind UserPreferences::class
     singleOf(::SessionStorageDataStore) bind SessionStorage::class
     singleOf(::HttpClientFactory)
+    singleOf(::MainViewModel)
     single<HttpClient> {
         get<HttpClientFactory>().create(CIO.create())
     }

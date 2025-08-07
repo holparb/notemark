@@ -75,7 +75,10 @@ class HttpClientFactory(
                         }
                         when(result) {
                             is Result.Error -> {
-                                //TODO add logout endpoint call
+                                // TODO call logout endpoint
+                                sessionStorage.updateSessionData(
+                                    SessionData()
+                                )
                                 BearerTokens("", "")
                             }
                             is Result.Success -> BearerTokens(

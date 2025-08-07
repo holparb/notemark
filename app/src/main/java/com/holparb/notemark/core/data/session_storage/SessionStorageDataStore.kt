@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.dataStore
 import com.holparb.notemark.core.domain.session_storage.SessionData
 import com.holparb.notemark.core.domain.session_storage.SessionStorage
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
 class SessionStorageDataStore(
@@ -23,5 +24,9 @@ class SessionStorageDataStore(
 
     override suspend fun getSessionData(): SessionData {
         return context.sessionStorageDataStore.data.first()
+    }
+
+    override fun observeSessionData(): Flow<SessionData> {
+        return context.sessionStorageDataStore.data
     }
 }
