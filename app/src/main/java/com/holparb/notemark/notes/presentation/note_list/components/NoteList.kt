@@ -3,7 +3,10 @@ package com.holparb.notemark.notes.presentation.note_list.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
@@ -14,30 +17,31 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.holparb.notemark.core.presentation.designsystem.theme.NoteMarkTheme
 import com.holparb.notemark.notes.presentation.models.NoteUi
+import com.holparb.notemark.notes.presentation.note_list.models.NoteListConfig
 import java.time.Instant
 
 @Composable
 fun NoteList(
     notes: List<NoteUi>,
-    numberOfColumns: Int,
+    noteListConfig: NoteListConfig,
     onClick: (String) -> Unit,
     onLongClick: (String) -> Unit,
-    maxTextCharactersDisplayed: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LazyVerticalStaggeredGrid(
         modifier = modifier
             .fillMaxWidth()
-            .background(color = MaterialTheme.colorScheme.surface),
-        columns = StaggeredGridCells.Fixed(numberOfColumns),
-        contentPadding = PaddingValues(16.dp),
+            .background(color = MaterialTheme.colorScheme.surface)
+            .windowInsetsPadding(noteListConfig.windowInsets),
+        columns = StaggeredGridCells.Fixed(noteListConfig.numberOfColumns),
+        contentPadding = noteListConfig.contentPadding,
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalItemSpacing = 16.dp
     ) {
         items(notes) { note ->
             NoteCard(
                 note = note,
-                maxTextCharactersDisplayed = maxTextCharactersDisplayed,
+                maxTextCharactersDisplayed = noteListConfig.maxCharactersDisplayed,
                 onClick = onClick,
                 onLongClick = onLongClick
             )
@@ -58,10 +62,14 @@ private fun NoteListPreview() {
                     createdAt = Instant.now()
                 )
             },
-            numberOfColumns = 2,
+            NoteListConfig(
+                numberOfColumns = 2,
+                maxCharactersDisplayed = 150,
+                contentPadding = PaddingValues(16.dp),
+                windowInsets = WindowInsets.safeDrawing
+            ),
             onClick = {},
             onLongClick = {},
-            maxTextCharactersDisplayed = 150,
         )
     }
 }
