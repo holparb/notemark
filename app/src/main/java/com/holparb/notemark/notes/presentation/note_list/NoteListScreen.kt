@@ -19,7 +19,6 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.holparb.notemark.R
 import com.holparb.notemark.core.presentation.designsystem.buttons.GradientBackgroundFab
 import com.holparb.notemark.core.presentation.designsystem.theme.NoteMarkTheme
@@ -29,11 +28,12 @@ import com.holparb.notemark.notes.presentation.note_list.components.EmptyNoteLis
 import com.holparb.notemark.notes.presentation.note_list.components.NoteList
 import com.holparb.notemark.notes.presentation.note_list.components.NoteListTopBar
 import com.holparb.notemark.notes.presentation.note_list.components.getNoteListConfig
+import org.koin.androidx.compose.koinViewModel
 import java.time.Instant
 
 @Composable
 fun NoteListRoot(
-    viewModel: NoteListViewModel = viewModel()
+    viewModel: NoteListViewModel = koinViewModel<NoteListViewModel>()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -55,7 +55,7 @@ fun NoteListScreen(
         contentWindowInsets = WindowInsets.systemBars,
         topBar = {
             NoteListTopBar(
-                userInitials = "PL"
+                userInitials = state.userInitials
             )
         },
         floatingActionButton = {
