@@ -1,6 +1,7 @@
 package com.holparb.notemark.core.data.networking
 
 import com.holparb.notemark.BuildConfig
+import com.holparb.notemark.core.data.session_storage.RefreshTokenRequest
 import com.holparb.notemark.core.domain.result.Result
 import com.holparb.notemark.core.domain.session_storage.SessionData
 import com.holparb.notemark.core.domain.session_storage.SessionStorage
@@ -60,12 +61,13 @@ class HttpClientFactory(
                     }
                     refreshTokens {
                         val sessionData = sessionStorage.getSessionData()
+                        println("Refresh token: ${sessionData.refreshToken}")
                         val result = safeCall<SessionData> {
                             client.post(
                                 urlString = constructUrl(REFRESH_TOKEN_ENDPOINT)
                             ) {
                                 setBody(
-                                    SessionData(
+                                    RefreshTokenRequest(
                                         refreshToken = sessionData.refreshToken
                                     )
                                 )
@@ -80,10 +82,18 @@ class HttpClientFactory(
                                 )
                                 BearerTokens("", "")
                             }
-                            is Result.Success -> BearerTokens(
-                                accessToken = result.data.accessToken!!,
-                                refreshToken = result.data.refreshToken
-                            )
+                            is Result.Success -> {
+                                sessionStorage.updateSessionData(
+                                    SessionData(
+                                        accessToken = result.data.accessToken,
+                                        refreshToken = result.data.refreshToken
+                                    )
+                                )
+                                BearerTokens(
+                                    accessToken = result.data.accessToken!!,
+                                    refreshToken = result.data.refreshToken
+                                )
+                            }
                         }
                     }
                 }
