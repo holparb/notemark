@@ -2,8 +2,6 @@ package com.holparb.notemark.notes.data.repository
 
 import com.holparb.notemark.core.domain.result.NetworkError
 import com.holparb.notemark.core.domain.result.Result
-import com.holparb.notemark.core.domain.result.onError
-import com.holparb.notemark.core.domain.result.onSuccess
 import com.holparb.notemark.notes.data.database.NoteDao
 import com.holparb.notemark.notes.data.mappers.toNote
 import com.holparb.notemark.notes.data.mappers.toNoteDto
@@ -35,10 +33,12 @@ class NoteRepositoryImpl(
         }
     }
 
-    override fun observeNotes(): Result<Flow<Note>, DataError.LocalError> {
+    override fun observeNotes(): Result<Flow<List<Note>>, DataError.LocalError> {
         return try {
             Result.Success(
-                noteDao.observeNotes().map { it.toNote() }
+                noteDao.observeNotes().map { notes ->
+                    notes.map { it.toNote() }
+                }
             )
         } catch (e: Exception) {
             Result.Error(DataError.LocalError(DatabaseError.FETCH_FAILED))
