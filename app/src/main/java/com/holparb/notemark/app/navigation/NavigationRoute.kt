@@ -13,5 +13,5 @@ sealed interface NavigationRoute {
     data object Register: NavigationRoute
 
     @Serializable
-    data class NoteList(val username: String = ""): NavigationRoute
+    data object NoteList: NavigationRoute
 }

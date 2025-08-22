@@ -46,7 +46,7 @@ import org.koin.androidx.compose.koinViewModel
 fun LoginRoot(
     viewModel: LoginViewModel = koinViewModel<LoginViewModel>(),
     navigateToCreateAccount: () -> Unit,
-    navigateToNoteList: (String) -> Unit,
+    navigateToNoteList: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -69,7 +69,7 @@ fun LoginScreen(
     state: LoginState,
     events: Flow<LoginEvent>,
     onAction: (LoginAction) -> Unit,
-    navigateToNoteList: (String) -> Unit,
+    navigateToNoteList: () -> Unit,
 ) {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     val deviceConfiguration = DeviceConfiguration.fromWindowSizeClass(windowSizeClass)
@@ -105,7 +105,7 @@ fun LoginScreen(
                 }
             }
             is LoginEvent.LoginSuccessful -> {
-                navigateToNoteList(event.username)
+                navigateToNoteList()
             }
         }
     }

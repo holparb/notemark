@@ -1,6 +1,5 @@
 package com.holparb.notemark.auth.domain.repository
 
-import com.holparb.notemark.auth.domain.token.Token
 import com.holparb.notemark.core.domain.result.NetworkError
 import com.holparb.notemark.core.domain.result.Result
 
@@ -15,10 +14,4 @@ interface AuthRepository {
         email: String,
         password: String
     ): Result<String, NetworkError>
-
-    suspend fun refreshToken(): Result<Token, NetworkError>
-
-    suspend fun getUsername(): String
-
-    suspend fun getTokens(): Token
 }

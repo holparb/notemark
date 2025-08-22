@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.junit5)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 android {
@@ -54,6 +56,10 @@ android {
     }
 }
 
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -70,6 +76,7 @@ dependencies {
 
     // DataStore
     implementation(libs.androidx.datastore)
+    implementation(libs.androidx.datastore.preferences)
 
     // Adaptive Screen Sizes
     implementation(libs.material3.adaptive)
@@ -83,6 +90,10 @@ dependencies {
 
     // Ktor
     implementation(libs.bundles.ktor)
+
+    // Room
+    implementation(libs.bundles.room)
+    ksp(libs.room.compiler)
 
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
