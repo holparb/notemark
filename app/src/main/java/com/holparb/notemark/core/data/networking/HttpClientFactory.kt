@@ -70,7 +70,6 @@ class HttpClientFactory(
                                     )
                                 )
                                 markAsRefreshTokenRequest()
-                                header("Debug", true)
                             }
                         }
                         when(result) {
