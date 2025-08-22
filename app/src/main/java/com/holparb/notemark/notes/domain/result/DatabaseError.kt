@@ -4,5 +4,6 @@ import com.holparb.notemark.core.domain.result.Error
 
 enum class DatabaseError: Error {
     UPSERT_FAILED,
-    FETCH_FAILED
+    FETCH_FAILED,
+    DELETE_FAILED
 }
