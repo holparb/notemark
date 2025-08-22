@@ -2,15 +2,24 @@ package com.holparb.notemark.notes.presentation.note_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.holparb.notemark.core.domain.result.onError
+import com.holparb.notemark.core.domain.result.onSuccess
 import com.holparb.notemark.core.domain.user_preferences.UserPreferences
+import com.holparb.notemark.notes.domain.repository.NoteRepository
+import com.holparb.notemark.notes.presentation.mappers.toNoteUi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class NoteListViewModel(
-    private val userPreferences: UserPreferences
+    private val userPreferences: UserPreferences,
+    private val noteRepository: NoteRepository
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
@@ -20,6 +29,8 @@ class NoteListViewModel(
         .onStart {
             if (!hasLoadedInitialData) {
                 deriveUserInitials()
+                loadInitialNotes()
+                observeNotes()
                 hasLoadedInitialData = true
             }
         }
@@ -80,4 +91,43 @@ class NoteListViewModel(
         }
     }
 
+    private fun loadInitialNotes() {
+        _state.update {
+            it.copy(isLoading = true)
+        }
+        viewModelScope.launch {
+            noteRepository.getNotes()
+                .onError {
+                    _state.update {
+                        it.copy(isLoading = false)
+                    }
+                    //TODO send error event to UI
+                }
+                .onSuccess { notes ->
+                    _state.update { state ->
+                        state.copy(
+                            isLoading = false,
+                            notes = notes.map {  it.toNoteUi() }
+                        )
+                    }
+                }
+        }
+    }
+
+    private fun observeNotes() {
+        noteRepository.observeNotes()
+            .onError {
+                //TODO send error event to UI
+            }
+            .onSuccess { notesFlow ->
+                notesFlow
+                    .distinctUntilChanged()
+                    .onEach { notes ->
+                        _state.update { state ->
+                            state.copy(notes.map { it.toNoteUi() })
+                        }
+                    }
+                    .launchIn(viewModelScope)
+            }
+    }
 }
