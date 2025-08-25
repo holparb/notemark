@@ -37,13 +37,20 @@ import java.time.Instant
 
 @Composable
 fun NoteListRoot(
-    viewModel: NoteListViewModel = koinViewModel<NoteListViewModel>()
+    viewModel: NoteListViewModel = koinViewModel<NoteListViewModel>(),
+    navigateToCreateEditNote: (String) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     NoteListScreen(
         state = state,
-        onAction = viewModel::onAction
+        onAction = { action ->
+            when(action) {
+                NoteListAction.CreateNoteClick -> navigateToCreateEditNote("")
+                else -> Unit
+            }
+            viewModel.onAction(action)
+        }
     )
 }
 

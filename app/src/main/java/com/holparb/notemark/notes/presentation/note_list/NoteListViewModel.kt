@@ -42,7 +42,7 @@ class NoteListViewModel(
 
     fun onAction(action: NoteListAction) {
         when (action) {
-            NoteListAction.CreateNoteClick -> createNote()
+            NoteListAction.CreateNoteClick -> Unit
             is NoteListAction.NoteClick -> noteClick(action.noteId)
             is NoteListAction.NoteLongClick -> noteLongClick(action.noteId)
         }
@@ -54,10 +54,6 @@ class NoteListViewModel(
 
     private fun noteClick(noteId: String) {
         println("noteClick")
-    }
-
-    private fun createNote() {
-        println("createNote")
     }
 
     private suspend fun deriveUserInitials() {

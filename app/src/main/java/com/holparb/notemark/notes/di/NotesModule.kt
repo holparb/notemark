@@ -6,6 +6,7 @@ import com.holparb.notemark.notes.data.database.NoteDatabase
 import com.holparb.notemark.notes.data.remote.NoteRemoteDataSource
 import com.holparb.notemark.notes.data.repository.NoteRepositoryImpl
 import com.holparb.notemark.notes.domain.repository.NoteRepository
+import com.holparb.notemark.notes.presentation.create_edit_note.CreateEditNoteViewModel
 import com.holparb.notemark.notes.presentation.note_list.NoteListViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.dsl.singleOf
@@ -28,4 +29,5 @@ val notesModule = module {
     singleOf(::NoteRepositoryImpl) bind NoteRepository::class
 
     viewModelOf(::NoteListViewModel)
+    viewModelOf(::CreateEditNoteViewModel)
 }

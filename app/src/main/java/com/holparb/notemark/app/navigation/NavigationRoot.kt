@@ -8,6 +8,7 @@ import androidx.navigation.compose.navigation
 import com.holparb.notemark.auth.presentation.landing.LandingScreen
 import com.holparb.notemark.auth.presentation.login.LoginRoot
 import com.holparb.notemark.auth.presentation.register.RegisterRoot
+import com.holparb.notemark.notes.presentation.create_edit_note.CreateEditNoteRoot
 import com.holparb.notemark.notes.presentation.note_list.NoteListRoot
 
 @Composable
@@ -69,7 +70,14 @@ fun NavigationRoot(
             startDestination = NavigationRoute.NoteList
         ) {
             composable<NavigationRoute.NoteList> {
-                NoteListRoot()
+                NoteListRoot(
+                    navigateToCreateEditNote = { noteId ->
+                        navController.navigate(NavigationRoute.CreateEditNote(noteId))
+                    }
+                )
+            }
+            composable<NavigationRoute.CreateEditNote> {
+                CreateEditNoteRoot()
             }
         }
     }
