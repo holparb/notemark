@@ -61,7 +61,6 @@ class HttpClientFactory(
                     }
                     refreshTokens {
                         val sessionData = sessionStorage.getSessionData()
-                        println("Refresh token: ${sessionData.refreshToken}")
                         val result = safeCall<SessionData> {
                             client.post(
                                 urlString = constructUrl(REFRESH_TOKEN_ENDPOINT)
