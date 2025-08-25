@@ -106,8 +106,7 @@ class NoteListViewModel(
                 .onSuccess { notes ->
                     _state.update { state ->
                         state.copy(
-                            isLoading = false,
-                            notes = notes.map {  it.toNoteUi() }
+                            isLoading = false
                         )
                     }
                 }

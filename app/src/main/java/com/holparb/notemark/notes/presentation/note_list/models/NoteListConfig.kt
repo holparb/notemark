@@ -7,5 +7,5 @@ data class NoteListConfig(
     val maxCharactersDisplayed: Int,
     val numberOfColumns: Int,
     val contentPadding: PaddingValues,
-    val windowInsets: WindowInsets
+    val windowInsets: WindowInsets = WindowInsets(0, 0, 0, 0)
 )

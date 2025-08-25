@@ -16,13 +16,12 @@ fun getNoteListConfig(deviceConfiguration: DeviceConfiguration): NoteListConfig 
         DeviceConfiguration.PHONE_PORTRAIT -> NoteListConfig(
             numberOfColumns = 2,
             maxCharactersDisplayed = 150,
-            contentPadding = PaddingValues(16.dp),
-            windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Vertical)
+            contentPadding = PaddingValues(16.dp)
         )
         DeviceConfiguration.PHONE_LANDSCAPE -> NoteListConfig(
             numberOfColumns = 3,
             maxCharactersDisplayed = 150,
-            contentPadding = PaddingValues(top = 16.dp, end = 16.dp),
+            contentPadding = PaddingValues(16.dp),
             windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal)
         )
         DeviceConfiguration.TABLET_PORTRAIT,
@@ -30,8 +29,7 @@ fun getNoteListConfig(deviceConfiguration: DeviceConfiguration): NoteListConfig 
         DeviceConfiguration.UNKNOWN -> NoteListConfig(
             numberOfColumns = 2,
             maxCharactersDisplayed = 250,
-            contentPadding = PaddingValues(top = 16.dp, start = 24.dp, end = 24.dp),
-            windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Vertical)
+            contentPadding = PaddingValues(top = 16.dp, start = 24.dp, end = 24.dp, bottom = 16.dp)
         )
     }
 }

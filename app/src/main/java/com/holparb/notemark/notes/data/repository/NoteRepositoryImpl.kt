@@ -21,14 +21,18 @@ class NoteRepositoryImpl(
     private val noteRemoteDataSource: NoteRemoteDataSource,
     private val applicationScope: CoroutineScope
 ): NoteRepository {
-    override suspend fun getNotes(page: Int, size: Int): Result<List<Note>, DataError> {
+    override suspend fun getNotes(page: Int, size: Int): Result<Unit, DataError> {
         val remoteResult = noteRemoteDataSource.getNotes(page = page, size = size)
         return when(remoteResult) {
             is Result.Error -> Result.Error(DataError.RemoteError(remoteResult.error))
             is Result.Success -> {
                 val noteEntities = remoteResult.data.map { it.toNoteEntity() }
-                noteDao.upsertNotes(noteEntities)
-                Result.Success(noteEntities.map { it.toNote() })
+                try {
+                    noteDao.upsertNotes(noteEntities)
+                    Result.Success(Unit)
+                } catch (e: Exception) {
+                    Result.Error(DataError.LocalError(DatabaseError.UPSERT_FAILED))
+                }
             }
         }
     }

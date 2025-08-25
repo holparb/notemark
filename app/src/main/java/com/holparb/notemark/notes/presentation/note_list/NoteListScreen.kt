@@ -1,7 +1,10 @@
 package com.holparb.notemark.notes.presentation.note_list
 
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
@@ -17,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.holparb.notemark.R
@@ -50,6 +54,13 @@ fun NoteListScreen(
 ) {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     val deviceConfiguration = DeviceConfiguration.fromWindowSizeClass(windowSizeClass)
+    val fabEndPadding = when(deviceConfiguration) {
+        DeviceConfiguration.PHONE_LANDSCAPE -> WindowInsets
+            .navigationBars
+            .asPaddingValues()
+            .calculateRightPadding(LayoutDirection.Ltr)
+        else -> 0.dp
+    }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets.systemBars,
@@ -60,7 +71,9 @@ fun NoteListScreen(
         },
         floatingActionButton = {
             GradientBackgroundFab(
-                modifier = Modifier.size(64.dp),
+                modifier = Modifier
+                    .padding(bottom = 12.dp, end = fabEndPadding)
+                    .size(64.dp),
                 icon = {
                     Icon(
                         imageVector = Icons.Default.Add,
@@ -78,7 +91,7 @@ fun NoteListScreen(
             EmptyNoteList(Modifier.padding(innerPadding))
         } else {
             NoteList(
-                modifier = Modifier.padding(innerPadding),
+                modifier = Modifier.padding(innerPadding).consumeWindowInsets(WindowInsets.navigationBars),
                 notes = state.notes,
                 noteListConfig = getNoteListConfig(deviceConfiguration),
                 onClick = { noteId ->
