@@ -35,4 +35,5 @@
     <string name="note_mark">NoteMark</string>
     <string name="empty_note_list_text">You’ve got an empty board,\nlet’s place your first note on it!</string>
     <string name="add_note">Add note</string>
+    <string name="note_title_hint">Note Title</string>
 </resources>
