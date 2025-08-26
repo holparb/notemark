@@ -14,6 +14,9 @@ interface NoteDao {
     @Query("SELECT * FROM notes ORDER BY createdAt DESC")
     fun observeNotes(): Flow<List<NoteEntity>>
 
+    @Query("SELECT * FROM notes WHERE noteId = :noteId")
+    suspend fun getNote(noteId: String): NoteEntity
+
     @Upsert
     suspend fun upsertNote(note: NoteEntity)
 

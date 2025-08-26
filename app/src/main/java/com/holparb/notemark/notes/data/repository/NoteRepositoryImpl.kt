@@ -22,8 +22,7 @@ class NoteRepositoryImpl(
     private val applicationScope: CoroutineScope
 ): NoteRepository {
     override suspend fun getNotes(page: Int, size: Int): Result<Unit, DataError> {
-        val remoteResult = noteRemoteDataSource.getNotes(page = page, size = size)
-        return when(remoteResult) {
+        return when(val remoteResult = noteRemoteDataSource.getNotes(page = page, size = size)) {
             is Result.Error -> Result.Error(DataError.RemoteError(remoteResult.error))
             is Result.Success -> {
                 val noteEntities = remoteResult.data.map { it.toNoteEntity() }
@@ -44,6 +43,15 @@ class NoteRepositoryImpl(
                     notes.map { it.toNote() }
                 }
             )
+        } catch (e: Exception) {
+            Result.Error(DataError.LocalError(DatabaseError.FETCH_FAILED))
+        }
+    }
+
+    override suspend fun getNote(noteId: String): Result<Note, DataError.LocalError> {
+        return try {
+            val note = noteDao.getNote(noteId)
+            Result.Success(note.toNote())
         } catch (e: Exception) {
             Result.Error(DataError.LocalError(DatabaseError.FETCH_FAILED))
         }
