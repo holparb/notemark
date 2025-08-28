@@ -1,5 +1,6 @@
 package com.holparb.notemark.notes.presentation.note_list
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -17,6 +18,7 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,6 +29,9 @@ import com.holparb.notemark.R
 import com.holparb.notemark.core.presentation.designsystem.buttons.GradientBackgroundFab
 import com.holparb.notemark.core.presentation.designsystem.theme.NoteMarkTheme
 import com.holparb.notemark.core.presentation.util.DeviceConfiguration
+import com.holparb.notemark.core.presentation.util.ObserveAsEvents
+import com.holparb.notemark.core.presentation.util.toString
+import com.holparb.notemark.notes.domain.result.DataError
 import com.holparb.notemark.notes.presentation.models.NoteUi
 import com.holparb.notemark.notes.presentation.note_list.components.EmptyNoteList
 import com.holparb.notemark.notes.presentation.note_list.components.NoteList
@@ -41,16 +46,28 @@ fun NoteListRoot(
     navigateToCreateEditNote: (String) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    ObserveAsEvents(viewModel.events) { event ->
+        when(event) {
+            is NoteListEvent.NoteCreated -> navigateToCreateEditNote(event.noteId)
+            is NoteListEvent.NoteListError -> {
+                val errorText = when(event.dataError) {
+                    is DataError.LocalError -> event.dataError.error.toString(context)
+                    is DataError.RemoteError -> event.dataError.error.toString(context)
+                }
+                Toast.makeText(
+                    context,
+                    errorText,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
 
     NoteListScreen(
         state = state,
-        onAction = { action ->
-            when(action) {
-                NoteListAction.CreateNoteClick -> navigateToCreateEditNote("")
-                else -> Unit
-            }
-            viewModel.onAction(action)
-        }
+        onAction = viewModel::onAction
     )
 }
 

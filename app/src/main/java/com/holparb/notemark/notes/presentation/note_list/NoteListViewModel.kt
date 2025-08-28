@@ -7,12 +7,14 @@ import com.holparb.notemark.core.domain.result.onSuccess
 import com.holparb.notemark.core.domain.user_preferences.UserPreferences
 import com.holparb.notemark.notes.domain.repository.NoteRepository
 import com.holparb.notemark.notes.presentation.mappers.toNoteUi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -40,11 +42,26 @@ class NoteListViewModel(
             initialValue = NoteListState()
         )
 
+    private val _events = Channel<NoteListEvent>()
+    val events = _events.receiveAsFlow()
+
     fun onAction(action: NoteListAction) {
         when (action) {
-            NoteListAction.CreateNoteClick -> Unit
+            NoteListAction.CreateNoteClick -> createNote()
             is NoteListAction.NoteClick -> noteClick(action.noteId)
             is NoteListAction.NoteLongClick -> noteLongClick(action.noteId)
+        }
+    }
+
+    private fun createNote() {
+        viewModelScope.launch {
+            noteRepository.createNewNoteInDatabase()
+                .onError { error ->
+                    _events.send(NoteListEvent.NoteListError(error))
+                }
+                .onSuccess { noteId ->
+                    _events.send(NoteListEvent.NoteCreated(noteId))
+                }
         }
     }
 

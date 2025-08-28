@@ -3,6 +3,7 @@ package com.holparb.notemark.notes.data.repository
 import com.holparb.notemark.core.domain.result.NetworkError
 import com.holparb.notemark.core.domain.result.Result
 import com.holparb.notemark.notes.data.database.NoteDao
+import com.holparb.notemark.notes.data.database.NoteEntity
 import com.holparb.notemark.notes.data.mappers.toNote
 import com.holparb.notemark.notes.data.mappers.toNoteDto
 import com.holparb.notemark.notes.data.mappers.toNoteEntity
@@ -15,6 +16,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.Instant
+import java.util.UUID
 
 class NoteRepositoryImpl(
     private val noteDao: NoteDao,
@@ -54,6 +57,22 @@ class NoteRepositoryImpl(
             Result.Success(note.toNote())
         } catch (e: Exception) {
             Result.Error(DataError.LocalError(DatabaseError.FETCH_FAILED))
+        }
+    }
+
+    override suspend fun createNewNoteInDatabase(): Result<String, DataError.LocalError> {
+        val note = NoteEntity(
+            noteId = UUID.randomUUID().toString(),
+            title = "",
+            content = "",
+            createdAt = Instant.now().toEpochMilli(),
+            lastEditedAt = Instant.now().toEpochMilli()
+        )
+        return try {
+            noteDao.upsertNote(note)
+            Result.Success(note.noteId)
+        } catch(e: Exception) {
+            Result.Error(DataError.LocalError(DatabaseError.UPSERT_FAILED))
         }
     }
 
