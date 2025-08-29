@@ -15,7 +15,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.holparb.notemark.core.presentation.designsystem.theme.NoteMarkTheme
 import com.holparb.notemark.core.presentation.util.DeviceConfiguration
+import com.holparb.notemark.notes.presentation.create_edit_note.components.CancelNoteDialog
 import com.holparb.notemark.notes.presentation.create_edit_note.components.CreateEditNote
+import com.holparb.notemark.notes.presentation.create_edit_note.components.PortraitTopBar
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -48,11 +50,20 @@ fun CreateEditNoteScreen(
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.surfaceContainerLowest)
                 ) {
+                    PortraitTopBar(
+                        onCancelClick = {
+                            onAction(CreateEditNoteAction.ShowCancelDialog)
+                        },
+                        onSaveClick = {
+                            onAction(CreateEditNoteAction.SaveNoteClicked)
+                        }
+                    )
                     CreateEditNote(
                         modifier = Modifier
                             .padding(innerPadding),
                         title = state.title,
                         content = state.content,
+                        cancelDialogVisible = state.cancelDialogVisible,
                         onTitleChange = {
                             onAction(CreateEditNoteAction.NoteTitleChanged(it))
                         },
@@ -77,7 +88,8 @@ fun CreateEditNoteScreen(
                         },
                         onContentChange = {
                             onAction(CreateEditNoteAction.NoteContentChanged(it))
-                        }
+                        },
+                        cancelDialogVisible = state.cancelDialogVisible
                     )
                 }
             }
@@ -86,6 +98,16 @@ fun CreateEditNoteScreen(
             DeviceConfiguration.UNKNOWN -> {
 
             }
+        }
+        if(state.cancelDialogVisible) {
+            CancelNoteDialog(
+                onConfirm = {
+                    onAction(CreateEditNoteAction.NoteCancelled)
+                },
+                onDismiss = {
+                    onAction(CreateEditNoteAction.DismissCancelDialog)
+                }
+            )
         }
     }
 }

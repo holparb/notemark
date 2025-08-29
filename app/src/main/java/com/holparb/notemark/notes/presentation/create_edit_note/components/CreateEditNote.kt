@@ -24,6 +24,7 @@ fun CreateEditNote(
     content: String,
     onTitleChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
+    cancelDialogVisible: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(

@@ -5,12 +5,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.holparb.notemark.app.navigation.NavigationRoute
+import com.holparb.notemark.core.domain.result.onError
+import com.holparb.notemark.core.domain.result.onSuccess
+import com.holparb.notemark.notes.domain.models.Note
 import com.holparb.notemark.notes.domain.repository.NoteRepository
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class CreateEditNoteViewModel(
     private val savedStateHandle: SavedStateHandle,
@@ -21,6 +27,7 @@ class CreateEditNoteViewModel(
 
     private val route = savedStateHandle.toRoute<NavigationRoute.CreateEditNote>()
     private val noteId = route.noteId
+    private var originalNote: Note? = null
 
     private val _state = MutableStateFlow(CreateEditNoteState())
     val state = _state
@@ -38,12 +45,23 @@ class CreateEditNoteViewModel(
             initialValue = CreateEditNoteState()
         )
 
+    private val _events = Channel<CreateEditNoteEvent>()
+    val events = _events.receiveAsFlow()
+
     fun onAction(action: CreateEditNoteAction) {
         when (action) {
             is CreateEditNoteAction.NoteContentChanged -> noteContentChanged(action.text)
             is CreateEditNoteAction.NoteTitleChanged -> noteTitleChanged(action.text)
-            CreateEditNoteAction.CancelClicked -> cancelNote()
+            CreateEditNoteAction.ShowCancelDialog -> setCancelDialogVisibility(true)
+            CreateEditNoteAction.DismissCancelDialog -> setCancelDialogVisibility(false)
             CreateEditNoteAction.SaveNoteClicked -> saveNote()
+            CreateEditNoteAction.NoteCancelled -> cancelNote()
+        }
+    }
+
+    private fun setCancelDialogVisibility(visible: Boolean) {
+        _state.update {
+            it.copy(cancelDialogVisible = visible)
         }
     }
 
@@ -68,6 +86,20 @@ class CreateEditNoteViewModel(
     }
 
     private fun loadNote(noteId: String) {
-
+        viewModelScope.launch {
+            noteRepository.getNote(noteId)
+                .onError { error ->
+                    _events.send(CreateEditNoteEvent.Error(error))
+                }
+                .onSuccess { note ->
+                    originalNote = note
+                    _state.update {
+                        it.copy(
+                            title = note.title,
+                            content = note.content
+                        )
+                    }
+                }
+        }
     }
 }
