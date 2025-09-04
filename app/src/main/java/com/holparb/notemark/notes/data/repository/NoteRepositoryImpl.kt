@@ -109,7 +109,6 @@ class NoteRepositoryImpl(
     }
 
     override suspend fun deleteNote(noteId: String): Result<Unit, DataError> {
-
         try {
             noteDao.deleteNoteById(noteId)
         } catch(e: Exception) {
@@ -123,5 +122,14 @@ class NoteRepositoryImpl(
                 is Result.Success -> Result.Success(Unit)
             }
         }.await()
+    }
+
+    override suspend fun deleteNoteFromDatabase(noteId: String): Result<Unit, DataError.LocalError> {
+        return try {
+            noteDao.deleteNoteById(noteId)
+            Result.Success(Unit)
+        } catch(e: Exception) {
+            Result.Error(DataError.LocalError(DatabaseError.DELETE_FAILED))
+        }
     }
 }

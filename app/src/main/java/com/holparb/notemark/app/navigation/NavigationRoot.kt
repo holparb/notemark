@@ -77,7 +77,15 @@ fun NavigationRoot(
                 )
             }
             composable<NavigationRoute.CreateEditNote> {
-                CreateEditNoteRoot()
+                CreateEditNoteRoot(
+                    navigateBack = {
+                        navController.navigate(NavigationRoute.NoteList) {
+                            popUpTo(NavigationRoute.NoteList) {
+                                inclusive = true
+                            }
+                        }
+                    }
+                )
             }
         }
     }

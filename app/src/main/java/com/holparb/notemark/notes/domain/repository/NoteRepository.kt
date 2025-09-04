@@ -14,4 +14,5 @@ interface NoteRepository {
     suspend fun createNote(note: Note): Result<Unit, DataError>
     suspend fun updateNote(note: Note): Result<Unit, DataError>
     suspend fun deleteNote(noteId: String): Result<Unit, DataError>
+    suspend fun deleteNoteFromDatabase(noteId: String): Result<Unit, DataError.LocalError>
 }

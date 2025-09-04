@@ -52,10 +52,10 @@ class CreateEditNoteViewModel(
         when (action) {
             is CreateEditNoteAction.NoteContentChanged -> noteContentChanged(action.text)
             is CreateEditNoteAction.NoteTitleChanged -> noteTitleChanged(action.text)
-            CreateEditNoteAction.ShowCancelDialog -> setCancelDialogVisibility(true)
+            CreateEditNoteAction.CancelNote -> cancelNote()
             CreateEditNoteAction.DismissCancelDialog -> setCancelDialogVisibility(false)
             CreateEditNoteAction.SaveNoteClicked -> saveNote()
-            CreateEditNoteAction.NoteCancelled -> cancelNote()
+            CreateEditNoteAction.NoteCancelConfirmed -> noteCancelled()
         }
     }
 
@@ -70,7 +70,31 @@ class CreateEditNoteViewModel(
     }
 
     private fun cancelNote() {
+        if(originalNote != null && originalNote!!.title.isBlank() && originalNote!!.content.isBlank()) {
+            viewModelScope.launch {
+                noteRepository.deleteNoteFromDatabase(originalNote!!.noteId)
+                    .onError { error ->
+                        _events.send(CreateEditNoteEvent.Error(error))
+                    }
+                    .onSuccess {
+                        _events.send(CreateEditNoteEvent.CancelSuccess)
+                    }
+            }
+        } else if(originalNote != null && (originalNote!!.title != state.value.title || originalNote!!.content != state.value.content)){
+            setCancelDialogVisibility(true)
+        } else {
+            viewModelScope.launch {
+                _events.send(CreateEditNoteEvent.CancelSuccess)
+            }
+        }
 
+    }
+
+    private fun noteCancelled() {
+        setCancelDialogVisibility(false)
+        viewModelScope.launch {
+            _events.send(CreateEditNoteEvent.CancelSuccess)
+        }
     }
 
     private fun noteTitleChanged(text: String) {
