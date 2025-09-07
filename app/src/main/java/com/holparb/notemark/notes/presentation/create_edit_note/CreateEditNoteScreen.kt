@@ -4,8 +4,10 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
@@ -65,14 +67,15 @@ fun CreateEditNoteScreen(
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     val deviceConfiguration = DeviceConfiguration.fromWindowSizeClass(windowSizeClass)
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        contentWindowInsets = WindowInsets.systemBars,
     ) { innerPadding ->
         when(deviceConfiguration) {
             DeviceConfiguration.PHONE_PORTRAIT -> {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
+                        .padding(innerPadding)
                         .background(MaterialTheme.colorScheme.surfaceContainerLowest)
                 ) {
                     PortraitTopBar(
@@ -84,8 +87,6 @@ fun CreateEditNoteScreen(
                         }
                     )
                     CreateEditNote(
-                        modifier = Modifier
-                            .padding(innerPadding),
                         title = state.title,
                         content = state.content,
                         onTitleChange = {
@@ -101,10 +102,10 @@ fun CreateEditNoteScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
+                        .padding(innerPadding)
                         .background(MaterialTheme.colorScheme.surfaceContainerLowest)
                 ) {
                     CreateEditNote(
-                        modifier = Modifier.padding(innerPadding),
                         title = state.title,
                         content = state.content,
                         onTitleChange = {
