@@ -70,7 +70,35 @@ class CreateEditNoteViewModel(
     }
 
     private fun cancelNote() {
-        if(originalNote != null && originalNote!!.title.isBlank() && originalNote!!.content.isBlank()) {
+        if(originalNote == null) {
+            viewModelScope.launch {
+                _events.send(CreateEditNoteEvent.CancelSuccess)
+                return@launch
+            }
+        }
+
+        if(originalNote?.title != state.value.title || originalNote?.content != state.value.content) {
+            setCancelDialogVisibility(true)
+        } else if(originalNote!!.title.isBlank() && originalNote!!.content.isBlank()) {
+                viewModelScope.launch {
+                    noteRepository.deleteNoteFromDatabase(originalNote!!.noteId)
+                        .onError { error ->
+                            _events.send(CreateEditNoteEvent.Error(error))
+                        }
+                        .onSuccess {
+                            _events.send(CreateEditNoteEvent.CancelSuccess)
+                        }
+                }
+        } else {
+            viewModelScope.launch {
+                _events.send(CreateEditNoteEvent.CancelSuccess)
+            }
+        }
+    }
+
+    private fun noteCancelled() {
+        setCancelDialogVisibility(false)
+        if(originalNote!!.title.isBlank() && originalNote!!.content.isBlank()) {
             viewModelScope.launch {
                 noteRepository.deleteNoteFromDatabase(originalNote!!.noteId)
                     .onError { error ->
@@ -80,21 +108,12 @@ class CreateEditNoteViewModel(
                         _events.send(CreateEditNoteEvent.CancelSuccess)
                     }
             }
-        } else if(originalNote != null && (originalNote!!.title != state.value.title || originalNote!!.content != state.value.content)){
-            setCancelDialogVisibility(true)
         } else {
             viewModelScope.launch {
                 _events.send(CreateEditNoteEvent.CancelSuccess)
             }
         }
 
-    }
-
-    private fun noteCancelled() {
-        setCancelDialogVisibility(false)
-        viewModelScope.launch {
-            _events.send(CreateEditNoteEvent.CancelSuccess)
-        }
     }
 
     private fun noteTitleChanged(text: String) {
