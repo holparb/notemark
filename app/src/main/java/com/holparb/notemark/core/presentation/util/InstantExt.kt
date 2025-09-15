@@ -14,7 +14,3 @@ fun Instant.toReadableDate(): String {
     }
     return this.atZone(ZoneId.systemDefault()).format(formatter)
 }
-
-fun Instant.toISO8601DateTimeString(): String {
-    return this.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-}

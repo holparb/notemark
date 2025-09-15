@@ -1,13 +1,9 @@
 package com.holparb.notemark.notes.data.mappers
 
-import com.holparb.notemark.core.presentation.util.toISO8601DateTimeString
 import com.holparb.notemark.notes.data.database.NoteEntity
 import com.holparb.notemark.notes.data.remote.NoteDto
 import com.holparb.notemark.notes.domain.models.Note
 import java.time.Instant
-import java.time.ZoneId
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
 fun NoteEntity.toNote(): Note {
@@ -35,8 +31,8 @@ fun Note.toNoteDto(): NoteDto {
         id = noteId,
         title = title,
         content = content,
-        createdAt = createdAt.toISO8601DateTimeString(),
-        lastEditedAt = createdAt.toISO8601DateTimeString()
+        createdAt = createdAt.toString(),
+        lastEditedAt = createdAt.toString()
     )
 }
 
@@ -51,9 +47,8 @@ fun NoteDto.toNoteEntity(): NoteEntity {
 }
 
 private fun convertISODateTimeStringToTimestamp(isoDateTimeString: String): Long {
-    val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.systemDefault())
     return try {
-        ZonedDateTime.parse(isoDateTimeString, formatter).toInstant().toEpochMilli()
+        Instant.parse(isoDateTimeString).toEpochMilli()
     } catch(e: DateTimeParseException) {
         0
     }
