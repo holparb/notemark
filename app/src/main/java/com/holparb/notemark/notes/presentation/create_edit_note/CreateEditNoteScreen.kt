@@ -1,6 +1,7 @@
 package com.holparb.notemark.notes.presentation.create_edit_note
 
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -66,6 +67,13 @@ fun CreateEditNoteScreen(
 ) {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     val deviceConfiguration = DeviceConfiguration.fromWindowSizeClass(windowSizeClass)
+
+    BackHandler(
+        enabled = !state.cancelDialogVisible
+    ) {
+        onAction(CreateEditNoteAction.CancelNote)
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets.systemBars,
