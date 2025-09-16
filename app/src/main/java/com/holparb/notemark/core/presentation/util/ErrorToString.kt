@@ -3,6 +3,7 @@ package com.holparb.notemark.core.presentation.util
 import android.content.Context
 import com.holparb.notemark.R
 import com.holparb.notemark.core.domain.result.NetworkError
+import com.holparb.notemark.notes.domain.result.DatabaseError
 
 fun NetworkError.toString(context: Context): String {
     val resId = when(this) {
@@ -14,6 +15,15 @@ fun NetworkError.toString(context: Context): String {
         NetworkError.CONNECTION_FAILED -> R.string.could_not_connect
         NetworkError.SERIALIZATION -> R.string.something_went_wrong
         NetworkError.UNKNOWN -> R.string.unknown_error_occurred
+    }
+    return context.getString(resId)
+}
+
+fun DatabaseError.toString(context: Context): String {
+    val resId = when(this) {
+        DatabaseError.UPSERT_FAILED -> R.string.upsert_failed
+        DatabaseError.FETCH_FAILED -> R.string.fetch_failed
+        DatabaseError.DELETE_FAILED -> R.string.database_delete_failed
     }
     return context.getString(resId)
 }

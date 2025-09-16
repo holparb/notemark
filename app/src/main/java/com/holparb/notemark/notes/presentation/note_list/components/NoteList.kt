@@ -4,7 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -30,7 +30,7 @@ fun NoteList(
 ) {
     LazyVerticalStaggeredGrid(
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.surface)
             .windowInsetsPadding(noteListConfig.windowInsets),
         columns = StaggeredGridCells.Fixed(noteListConfig.numberOfColumns),

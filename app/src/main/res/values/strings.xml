@@ -35,4 +35,14 @@
     <string name="note_mark">NoteMark</string>
     <string name="empty_note_list_text">You’ve got an empty board,\nlet’s place your first note on it!</string>
     <string name="add_note">Add note</string>
+    <string name="note_title_hint">Note Title</string>
+    <string name="upsert_failed">Failed to update database, please try again</string>
+    <string name="fetch_failed">Failed to get data from the database, please try again later</string>
+    <string name="database_delete_failed">Failed to remove item from database, please try again later</string>
+    <string name="cancel_note">Cancel note</string>
+    <string name="save_note">Save Note</string>
+    <string name="discard_changes">Discard changes?</string>
+    <string name="cancel_dialog_text">You have unsaved changes. If you discard now, all\nchanges will be lost.</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep Editing</string>
 </resources>
