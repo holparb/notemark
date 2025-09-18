@@ -23,8 +23,8 @@ import java.time.Instant
 fun NoteCard(
     note: NoteUi,
     maxTextCharactersDisplayed: Int,
-    onClick: (String) -> Unit,
-    onLongClick: (String) -> Unit,
+    onNoteClick: (String) -> Unit,
+    onNoteLongClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Surface(
@@ -34,8 +34,8 @@ fun NoteCard(
         modifier = modifier.combinedClickable(
             interactionSource = null,
             indication = null,
-            onClick = { onClick(note.id) },
-            onLongClick = { onLongClick(note.id) }
+            onClick = { onNoteClick(note.id) },
+            onLongClick = { onNoteLongClick(note.id) }
         )
     ) {
         Column(
@@ -77,8 +77,8 @@ private fun NoteCardPreview() {
                 createdAt = Instant.now()
             ),
             maxTextCharactersDisplayed = 150,
-            onClick = {},
-            onLongClick = {}
+            onNoteClick = {},
+            onNoteLongClick = {}
         )
     }
 }

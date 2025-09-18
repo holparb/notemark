@@ -67,7 +67,13 @@ fun NoteListRoot(
 
     NoteListScreen(
         state = state,
-        onAction = viewModel::onAction
+        onAction = { action ->
+            when(action) {
+                is NoteListAction.NoteClick -> navigateToCreateEditNote(action.noteId)
+                else -> Unit
+            }
+            viewModel.onAction(action)
+        }
     )
 }
 
@@ -118,10 +124,10 @@ fun NoteListScreen(
                 modifier = Modifier.padding(innerPadding).consumeWindowInsets(WindowInsets.navigationBars),
                 notes = state.notes,
                 noteListConfig = getNoteListConfig(deviceConfiguration),
-                onClick = { noteId ->
+                onNoteClick = { noteId ->
                     onAction(NoteListAction.NoteClick(noteId))
                 },
-                onLongClick = { noteId ->
+                onNoteLongClick = { noteId ->
                     onAction(NoteListAction.NoteLongClick(noteId))
                 }
             )

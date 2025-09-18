@@ -21,7 +21,7 @@ fun NavigationRoot(
         startDestination = if(isLoggedIn) NavigationGroup.Notes else NavigationGroup.Auth
     ) {
         navigation<NavigationGroup.Auth>(
-            startDestination = NavigationRoute.Landing
+            startDestination = NavigationRoute.Landing::class
         ) {
             composable<NavigationRoute.Landing> {
                 LandingScreen(
@@ -49,7 +49,7 @@ fun NavigationRoot(
                         navController.navigate(NavigationRoute.Register)
                     },
                     navigateToNoteList = {
-                        navController.navigate(NavigationGroup.Notes) {
+                        navController.navigate(NavigationRoute.NoteList(navigateFromLogin = true)) {
                             popUpTo(NavigationGroup.Auth) {
                                 inclusive = true
                             }
@@ -67,7 +67,7 @@ fun NavigationRoot(
             }
         }
         navigation<NavigationGroup.Notes>(
-            startDestination = NavigationRoute.NoteList
+            startDestination = NavigationRoute.NoteList::class
         ) {
             composable<NavigationRoute.NoteList> {
                 NoteListRoot(
@@ -79,8 +79,8 @@ fun NavigationRoot(
             composable<NavigationRoute.CreateEditNote> {
                 CreateEditNoteRoot(
                     navigateBack = {
-                        navController.navigate(NavigationRoute.NoteList) {
-                            popUpTo(NavigationRoute.NoteList) {
+                        navController.navigate(NavigationRoute.NoteList()) {
+                            popUpTo(NavigationRoute.NoteList()) {
                                 inclusive = true
                             }
                         }
