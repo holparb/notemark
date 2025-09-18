@@ -24,8 +24,8 @@ import java.time.Instant
 fun NoteList(
     notes: List<NoteUi>,
     noteListConfig: NoteListConfig,
-    onClick: (String) -> Unit,
-    onLongClick: (String) -> Unit,
+    onNoteClick: (String) -> Unit,
+    onNoteLongClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalStaggeredGrid(
@@ -42,8 +42,8 @@ fun NoteList(
             NoteCard(
                 note = note,
                 maxTextCharactersDisplayed = noteListConfig.maxCharactersDisplayed,
-                onClick = onClick,
-                onLongClick = onLongClick
+                onNoteClick = onNoteClick,
+                onNoteLongClick = onNoteLongClick
             )
         }
     }
@@ -68,8 +68,8 @@ private fun NoteListPreview() {
                 contentPadding = PaddingValues(16.dp),
                 windowInsets = WindowInsets.safeDrawing
             ),
-            onClick = {},
-            onLongClick = {},
+            onNoteClick = {},
+            onNoteLongClick = {},
         )
     }
 }

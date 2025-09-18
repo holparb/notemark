@@ -1,7 +1,10 @@
 package com.holparb.notemark.notes.presentation.note_list
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
+import com.holparb.notemark.app.navigation.NavigationRoute
 import com.holparb.notemark.core.domain.result.onError
 import com.holparb.notemark.core.domain.result.onSuccess
 import com.holparb.notemark.core.domain.user_preferences.UserPreferences
@@ -18,20 +21,26 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class NoteListViewModel(
+    private val savedStateHandle: SavedStateHandle,
     private val userPreferences: UserPreferences,
     private val noteRepository: NoteRepository
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
+    private val route = savedStateHandle.toRoute<NavigationRoute.NoteList>()
+    private val navigationFromLogin = route.navigateFromLogin
 
     private val _state = MutableStateFlow(NoteListState())
     val state = _state
         .onStart {
             if (!hasLoadedInitialData) {
                 deriveUserInitials()
-                loadInitialNotes()
+                if(navigationFromLogin) {
+                    loadInitialNotes()
+                }
                 observeNotes()
                 hasLoadedInitialData = true
             }
@@ -48,7 +57,7 @@ class NoteListViewModel(
     fun onAction(action: NoteListAction) {
         when (action) {
             NoteListAction.CreateNoteClick -> createNote()
-            is NoteListAction.NoteClick -> noteClick(action.noteId)
+            is NoteListAction.NoteClick -> Unit
             is NoteListAction.NoteLongClick -> noteLongClick(action.noteId)
         }
     }
@@ -67,10 +76,6 @@ class NoteListViewModel(
 
     private fun noteLongClick(noteId: String) {
         println("noteLongClick")
-    }
-
-    private fun noteClick(noteId: String) {
-        println("noteClick")
     }
 
     private suspend fun deriveUserInitials() {
@@ -129,14 +134,15 @@ class NoteListViewModel(
     private fun observeNotes() {
         noteRepository.observeNotes()
             .onError {
-                //TODO send error event to UI
+                Timber.e("Error while observing notes")
             }
             .onSuccess { notesFlow ->
                 notesFlow
                     .distinctUntilChanged()
                     .onEach { notes ->
+                        Timber.d("Notes updated: $notes")
                         _state.update { state ->
-                            state.copy(notes.map { it.toNoteUi() })
+                            state.copy(notes = notes.map { it.toNoteUi() })
                         }
                     }
                     .launchIn(viewModelScope)
