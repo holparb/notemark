@@ -143,8 +143,8 @@ fun CreateEditNoteScreen(
                 },
                 title = stringResource(R.string.discard_changes),
                 text = stringResource(R.string.cancel_dialog_text),
-                dismissButtonText = stringResource(R.string.discard),
-                confirmButtonText = stringResource(R.string.keep_editing)
+                dismissButtonText = stringResource(R.string.keep_editing),
+                confirmButtonText = stringResource(R.string.discard)
             )
         }
     }
