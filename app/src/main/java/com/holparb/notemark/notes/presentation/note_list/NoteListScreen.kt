@@ -32,6 +32,7 @@ import com.holparb.notemark.core.presentation.util.DeviceConfiguration
 import com.holparb.notemark.core.presentation.util.ObserveAsEvents
 import com.holparb.notemark.core.presentation.util.toString
 import com.holparb.notemark.notes.domain.result.DataError
+import com.holparb.notemark.notes.presentation.components.NoteDialog
 import com.holparb.notemark.notes.presentation.models.NoteUi
 import com.holparb.notemark.notes.presentation.note_list.components.EmptyNoteList
 import com.holparb.notemark.notes.presentation.note_list.components.NoteList
@@ -51,6 +52,13 @@ fun NoteListRoot(
     ObserveAsEvents(viewModel.events) { event ->
         when(event) {
             is NoteListEvent.NoteCreated -> navigateToCreateEditNote(event.noteId)
+            NoteListEvent.NoteDeleted -> {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.note_deleted),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
             is NoteListEvent.NoteListError -> {
                 val errorText = when(event.dataError) {
                     is DataError.LocalError -> event.dataError.error.toString(context)
@@ -130,6 +138,21 @@ fun NoteListScreen(
                 onNoteLongClick = { noteId ->
                     onAction(NoteListAction.NoteLongClick(noteId))
                 }
+            )
+        }
+
+        if(state.showNoteDeleteDialog) {
+            NoteDialog(
+                onConfirm = {
+                    onAction(NoteListAction.DeleteConfirm)
+                },
+                onDismiss = {
+                    onAction(NoteListAction.DeleteDialogDismiss)
+                },
+                title = stringResource(R.string.delete_note_dialog_title),
+                text = stringResource(R.string.delete_note_dialog_text),
+                dismissButtonText = stringResource(R.string.cancel),
+                confirmButtonText = stringResource(R.string.delete)
             )
         }
     }
