@@ -150,7 +150,6 @@ class CreateEditNoteViewModel(
                 _events.send(CreateEditNoteEvent.CancelSuccess)
             }
         }
-
     }
 
     private fun noteTitleChanged(text: String) {
