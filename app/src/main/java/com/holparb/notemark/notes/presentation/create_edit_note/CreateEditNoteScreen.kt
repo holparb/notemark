@@ -16,14 +16,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.holparb.notemark.R
 import com.holparb.notemark.core.presentation.designsystem.theme.NoteMarkTheme
 import com.holparb.notemark.core.presentation.util.DeviceConfiguration
 import com.holparb.notemark.core.presentation.util.ObserveAsEvents
 import com.holparb.notemark.core.presentation.util.toString
 import com.holparb.notemark.notes.domain.result.DataError
-import com.holparb.notemark.notes.presentation.create_edit_note.components.CancelNoteDialog
+import com.holparb.notemark.notes.presentation.components.NoteDialog
 import com.holparb.notemark.notes.presentation.create_edit_note.components.CreateEditNote
 import com.holparb.notemark.notes.presentation.create_edit_note.components.PortraitTopBar
 import org.koin.androidx.compose.koinViewModel
@@ -132,13 +134,17 @@ fun CreateEditNoteScreen(
             }
         }
         if(state.cancelDialogVisible) {
-            CancelNoteDialog(
+            NoteDialog(
                 onConfirm = {
                     onAction(CreateEditNoteAction.NoteCancelConfirmed)
                 },
                 onDismiss = {
                     onAction(CreateEditNoteAction.DismissCancelDialog)
-                }
+                },
+                title = stringResource(R.string.discard_changes),
+                text = stringResource(R.string.cancel_dialog_text),
+                dismissButtonText = stringResource(R.string.keep_editing),
+                confirmButtonText = stringResource(R.string.discard)
             )
         }
     }

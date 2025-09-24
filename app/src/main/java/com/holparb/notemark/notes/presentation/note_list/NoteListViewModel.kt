@@ -32,6 +32,7 @@ class NoteListViewModel(
     private var hasLoadedInitialData = false
     private val route = savedStateHandle.toRoute<NavigationRoute.NoteList>()
     private val navigationFromLogin = route.navigateFromLogin
+    private var selectedNoteId: String? = null
 
     private val _state = MutableStateFlow(NoteListState())
     val state = _state
@@ -59,6 +60,29 @@ class NoteListViewModel(
             NoteListAction.CreateNoteClick -> createNote()
             is NoteListAction.NoteClick -> Unit
             is NoteListAction.NoteLongClick -> noteLongClick(action.noteId)
+            is NoteListAction.DeleteConfirm -> deleteNote()
+            NoteListAction.DeleteDialogDismiss -> dismissDialog()
+        }
+    }
+
+    private fun deleteNote() {
+        if(selectedNoteId == null) {
+            return
+        }
+        viewModelScope.launch {
+            noteRepository.deleteNote(selectedNoteId!!)
+                .onError { error ->
+                    _events.send(NoteListEvent.NoteListError(error))
+                }
+                .onSuccess {
+                    selectedNoteId = null
+                    _state.update {
+                        it.copy(
+                            showNoteDeleteDialog = false
+                        )
+                    }
+                    _events.send(NoteListEvent.NoteDeleted)
+                }
         }
     }
 
@@ -75,7 +99,21 @@ class NoteListViewModel(
     }
 
     private fun noteLongClick(noteId: String) {
-        println("noteLongClick")
+        selectedNoteId = noteId
+        _state.update {
+            it.copy(
+                showNoteDeleteDialog = true
+            )
+        }
+    }
+
+    private fun dismissDialog() {
+        selectedNoteId = null
+        _state.update {
+            it.copy(
+                showNoteDeleteDialog = false
+            )
+        }
     }
 
     private suspend fun deriveUserInitials() {
