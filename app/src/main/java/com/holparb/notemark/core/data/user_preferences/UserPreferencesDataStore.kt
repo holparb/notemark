@@ -19,6 +19,7 @@ class UserPreferencesDataStore(
     }
 
     private val usernameKey = stringPreferencesKey("username")
+    private val userIdKey = stringPreferencesKey("userId")
 
     override suspend fun saveUsername(username: String) {
         context.userPreferencesDatastore.edit { prefs ->
@@ -29,6 +30,18 @@ class UserPreferencesDataStore(
     override suspend fun getUsername(): String {
         return context.userPreferencesDatastore.data.map { prefs ->
             prefs[usernameKey] ?: ""
+        }.first()
+    }
+
+    override suspend fun saveUserId(userId: String) {
+        context.userPreferencesDatastore.edit { prefs ->
+            prefs[userIdKey] = userId
+        }
+    }
+
+    override suspend fun getUserId(): String {
+        return context.userPreferencesDatastore.data.map { prefs ->
+            prefs[userIdKey] ?: ""
         }.first()
     }
 }
