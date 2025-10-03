@@ -1,11 +1,12 @@
 package com.holparb.notemark.notes.data.repository
 
-import com.holparb.notemark.core.domain.result.NetworkError
 import com.holparb.notemark.core.domain.result.Result
+import com.holparb.notemark.core.domain.user_preferences.UserPreferences
 import com.holparb.notemark.notes.data.database.NoteDao
 import com.holparb.notemark.notes.data.database.NoteEntity
+import com.holparb.notemark.notes.data.database.OperationType
+import com.holparb.notemark.notes.data.database.SyncEntity
 import com.holparb.notemark.notes.data.mappers.toNote
-import com.holparb.notemark.notes.data.mappers.toNoteDto
 import com.holparb.notemark.notes.data.mappers.toNoteEntity
 import com.holparb.notemark.notes.data.remote.NoteRemoteDataSource
 import com.holparb.notemark.notes.domain.models.Note
@@ -13,15 +14,16 @@ import com.holparb.notemark.notes.domain.repository.NoteRepository
 import com.holparb.notemark.notes.domain.result.DataError
 import com.holparb.notemark.notes.domain.result.DatabaseError
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.Json
 import java.time.Instant
 import java.util.UUID
 
 class NoteRepositoryImpl(
     private val noteDao: NoteDao,
     private val noteRemoteDataSource: NoteRemoteDataSource,
+    private val userPreferences: UserPreferences,
     private val applicationScope: CoroutineScope
 ): NoteRepository {
     override suspend fun getNotes(page: Int, size: Int): Result<Unit, DataError> {
@@ -77,12 +79,22 @@ class NoteRepositoryImpl(
     }
 
     override suspend fun createNote(note: Note): Result<Unit, DataError> {
-        try {
-            noteDao.upsertNote(note.toNoteEntity())
+        return try {
+            val syncEntity = SyncEntity(
+                id = UUID.randomUUID().toString(),
+                noteId = note.noteId,
+                userId = userPreferences.getUserId(),
+                operationType = OperationType.CREATE,
+                payload = Json.encodeToString(note.toNoteEntity()),
+                timestamp = Instant.now().toEpochMilli()
+            )
+            noteDao.upsertNoteWithSync(note.toNoteEntity(), syncEntity)
+            Result.Success(Unit)
         } catch(e: Exception) {
-            return Result.Error(DataError.LocalError(DatabaseError.UPSERT_FAILED))
+            Result.Error(DataError.LocalError(DatabaseError.UPSERT_FAILED))
         }
 
+        /*
         return applicationScope.async {
             val remoteResult = noteRemoteDataSource.createNote(note.toNoteDto())
             return@async when(remoteResult) {
@@ -90,15 +102,26 @@ class NoteRepositoryImpl(
                 is Result.Success -> Result.Success(Unit)
             }
         }.await()
+        */
     }
 
     override suspend fun updateNote(note: Note): Result<Unit, DataError> {
-        try {
-            noteDao.upsertNote(note.toNoteEntity())
+        return try {
+            val syncEntity = SyncEntity(
+                id = UUID.randomUUID().toString(),
+                noteId = note.noteId,
+                userId = userPreferences.getUserId(),
+                operationType = OperationType.UPDATE,
+                payload = Json.encodeToString(note.toNoteEntity()),
+                timestamp = Instant.now().toEpochMilli()
+            )
+            noteDao.upsertNoteWithSync(note.toNoteEntity(), syncEntity)
+            Result.Success(Unit)
         } catch(e: Exception) {
-            return Result.Error(DataError.LocalError(DatabaseError.UPSERT_FAILED))
+            Result.Error(DataError.LocalError(DatabaseError.UPSERT_FAILED))
         }
 
+        /*
         return applicationScope.async {
             val remoteResult = noteRemoteDataSource.updateNote(note.toNoteDto())
             return@async when(remoteResult) {
@@ -106,15 +129,26 @@ class NoteRepositoryImpl(
                 is Result.Success -> Result.Success(Unit)
             }
         }.await()
+        */
     }
 
     override suspend fun deleteNote(noteId: String): Result<Unit, DataError> {
-        try {
-            noteDao.deleteNoteById(noteId)
+        return try {
+            val syncEntity = SyncEntity(
+                id = UUID.randomUUID().toString(),
+                noteId = noteId,
+                userId = userPreferences.getUserId(),
+                operationType = OperationType.DELETE,
+                payload = noteId,
+                timestamp = Instant.now().toEpochMilli()
+            )
+            noteDao.deleteNoteWithSync(noteId, syncEntity)
+            Result.Success(Unit)
         } catch(e: Exception) {
-            return Result.Error(DataError.LocalError(DatabaseError.DELETE_FAILED))
+            Result.Error(DataError.LocalError(DatabaseError.DELETE_FAILED))
         }
 
+        /*
         return applicationScope.async {
             val remoteResult = noteRemoteDataSource.deleteNote(noteId)
             return@async when(remoteResult) {
@@ -122,6 +156,7 @@ class NoteRepositoryImpl(
                 is Result.Success -> Result.Success(Unit)
             }
         }.await()
+        */
     }
 
     override suspend fun deleteNoteFromDatabase(noteId: String): Result<Unit, DataError.LocalError> {
