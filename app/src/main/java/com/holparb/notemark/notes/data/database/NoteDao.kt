@@ -34,6 +34,9 @@ interface NoteDao {
     @Query("SELECT * from sync_queue WHERE userId = :userId")
     suspend fun getSyncEntriesByUserId(userId: String): List<SyncEntity>
 
+    @Query("SELECT * from sync_queue WHERE noteId = :noteId")
+    suspend fun getSyncEntriesByNoteId(noteId: String): List<SyncEntity>
+
     @Insert
     suspend fun insertSyncEntry(syncEntry: SyncEntity)
 
@@ -50,5 +53,11 @@ interface NoteDao {
     suspend fun deleteNoteWithSync(noteId: String, syncEntry: SyncEntity) {
         deleteNoteById(noteId)
         insertSyncEntry(syncEntry)
+    }
+
+    @Transaction
+    suspend fun deleteNoteWithoutSync(noteId: String, syncEntryId: String) {
+        deleteSyncEntryById(syncEntryId)
+        deleteNoteById(noteId)
     }
 }
