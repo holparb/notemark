@@ -18,6 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
+import timber.log.Timber
 import java.time.Instant
 import java.util.UUID
 
@@ -98,7 +99,12 @@ class NoteRepositoryImpl(
 
     override suspend fun updateNote(note: Note): Result<Unit, DataError> {
         return try {
-            val syncEntity = SyncEntity(
+            val syncEntityForNote = noteDao.getSyncEntryByNoteId(note.noteId)
+            val syncEntity = syncEntityForNote?.copy(
+                payload = Json.encodeToString(note.toNoteEntity()),
+                timestamp = Instant.now().toEpochMilli()
+            ) ?:
+            SyncEntity(
                 id = UUID.randomUUID().toString(),
                 noteId = note.noteId,
                 userId = userPreferences.getUserId(),
@@ -106,23 +112,21 @@ class NoteRepositoryImpl(
                 payload = Json.encodeToString(note.toNoteEntity()),
                 timestamp = Instant.now().toEpochMilli()
             )
+            Timber.d("Updated sync entry: $syncEntity")
             noteDao.upsertNoteWithSync(note.toNoteEntity(), syncEntity)
             Result.Success(Unit)
         } catch(e: Exception) {
-            Result.Error(DataError.LocalError(DatabaseError.UPSERT_FAILED))
+            Timber.e(e)
+            Result.Error(DataError.LocalError(DatabaseError.UPSERT_FAILED)) 
         }
     }
 
     override suspend fun deleteNote(noteId: String): Result<Unit, DataError> {
         return try {
             // Check if there are any sync entries for the note
-            val syncEntryForNote = noteDao.getSyncEntriesByNoteId(noteId)
-            if(syncEntryForNote.isNotEmpty()) {
-                // If there are sync entries we just need to delete them because the note is deleted before it would need to be synced.
-                syncEntryForNote.forEach { syncEntity ->
-                    noteDao.deleteNoteWithoutSync(noteId, syncEntity.id)
-                }
-            } else {
+            val syncEntryForNote = noteDao.getSyncEntryByNoteId(noteId)
+            if(syncEntryForNote == null ) {
+                Timber.d("No entry for note, create delete entry")
                 val syncEntity = SyncEntity(
                     id = UUID.randomUUID().toString(),
                     noteId = noteId,
@@ -132,9 +136,26 @@ class NoteRepositoryImpl(
                     timestamp = Instant.now().toEpochMilli()
                 )
                 noteDao.deleteNoteWithSync(noteId, syncEntity)
+            } else {
+                when(syncEntryForNote.operationType) {
+                    OperationType.CREATE -> {
+                        Timber.d("Delete without sync")
+                        noteDao.deleteNoteWithoutSync(noteId, syncEntryForNote.id)
+                    }
+                    OperationType.UPDATE -> {
+                        Timber.d("Existing entry for note, modify to delete entry")
+                        val syncEntity = syncEntryForNote.copy(
+                            payload = noteId,
+                            operationType = OperationType.DELETE
+                        )
+                        noteDao.deleteNoteWithSync(noteId, syncEntity)
+                    }
+                    OperationType.DELETE -> Unit
+                }
             }
             Result.Success(Unit)
         } catch(e: Exception) {
+            Timber.e(e)
             Result.Error(DataError.LocalError(DatabaseError.DELETE_FAILED))
         }
     }

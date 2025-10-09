@@ -1,7 +1,6 @@
 package com.holparb.notemark.notes.data.database
 
 import androidx.room.Dao
-import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
@@ -35,10 +34,10 @@ interface NoteDao {
     suspend fun getSyncEntriesByUserId(userId: String): List<SyncEntity>
 
     @Query("SELECT * from sync_queue WHERE noteId = :noteId")
-    suspend fun getSyncEntriesByNoteId(noteId: String): List<SyncEntity>
+    suspend fun getSyncEntryByNoteId(noteId: String): SyncEntity?
 
-    @Insert
-    suspend fun insertSyncEntry(syncEntry: SyncEntity)
+    @Upsert
+    suspend fun upsertSyncEntry(syncEntry: SyncEntity)
 
     @Query("DELETE from sync_queue WHERE id = :syncEntryId")
     suspend fun deleteSyncEntryById(syncEntryId: String)
@@ -46,13 +45,13 @@ interface NoteDao {
     @Transaction
     suspend fun upsertNoteWithSync(note: NoteEntity, syncEntry: SyncEntity) {
         upsertNote(note)
-        insertSyncEntry(syncEntry)
+        upsertSyncEntry(syncEntry)
     }
 
     @Transaction
     suspend fun deleteNoteWithSync(noteId: String, syncEntry: SyncEntity) {
         deleteNoteById(noteId)
-        insertSyncEntry(syncEntry)
+        upsertSyncEntry(syncEntry)
     }
 
     @Transaction
