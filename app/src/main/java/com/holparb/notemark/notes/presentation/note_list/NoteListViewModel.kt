@@ -62,6 +62,7 @@ class NoteListViewModel(
             is NoteListAction.NoteLongClick -> noteLongClick(action.noteId)
             is NoteListAction.DeleteConfirm -> deleteNote()
             NoteListAction.DeleteDialogDismiss -> dismissDialog()
+            NoteListAction.SettingsClick -> Unit
         }
     }
 
@@ -153,11 +154,11 @@ class NoteListViewModel(
         }
         viewModelScope.launch {
             noteRepository.getNotes()
-                .onError {
+                .onError { error ->
                     _state.update {
                         it.copy(isLoading = false)
                     }
-                    //TODO send error event to UI
+                    _events.send(NoteListEvent.NoteListError(error))
                 }
                 .onSuccess { notes ->
                     _state.update { state ->

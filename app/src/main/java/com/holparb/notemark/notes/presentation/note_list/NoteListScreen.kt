@@ -44,7 +44,8 @@ import java.time.Instant
 @Composable
 fun NoteListRoot(
     viewModel: NoteListViewModel = koinViewModel<NoteListViewModel>(),
-    navigateToCreateEditNote: (String) -> Unit
+    navigateToCreateEditNote: (String) -> Unit,
+    navigateToSettings: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -78,6 +79,7 @@ fun NoteListRoot(
         onAction = { action ->
             when(action) {
                 is NoteListAction.NoteClick -> navigateToCreateEditNote(action.noteId)
+                is NoteListAction.SettingsClick -> navigateToSettings()
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -104,7 +106,10 @@ fun NoteListScreen(
         contentWindowInsets = WindowInsets.systemBars,
         topBar = {
             NoteListTopBar(
-                userInitials = state.userInitials
+                userInitials = state.userInitials,
+                onSettingsClick = {
+                    onAction(NoteListAction.SettingsClick)
+                }
             )
         },
         floatingActionButton = {

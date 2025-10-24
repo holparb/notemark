@@ -6,7 +6,11 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -26,6 +30,7 @@ import com.holparb.notemark.core.presentation.designsystem.theme.NoteMarkTheme
 @Composable
 fun NoteListTopBar(
     userInitials: String,
+    onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     TopAppBar(
@@ -43,11 +48,21 @@ fun NoteListTopBar(
             FlowRow(
                 modifier = Modifier.padding(end = 16.dp)
             ) {
+                IconButton(
+                    modifier = Modifier.padding(end = 8.dp),
+                    onClick = onSettingsClick
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Settings,
+                        contentDescription = null
+                    )
+                }
                 Box(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(RoundedCornerShape(12.dp))
                         .background(MaterialTheme.colorScheme.primary)
+                        .align(Alignment.CenterVertically)
                 ) {
                     Text(
                         text = userInitials,
@@ -69,7 +84,8 @@ fun NoteListTopBar(
 private fun NoteListTopBarPreview() {
     NoteMarkTheme {
         NoteListTopBar(
-            userInitials = "PL"
+            userInitials = "PL",
+            onSettingsClick = {}
         )
     }
 }
