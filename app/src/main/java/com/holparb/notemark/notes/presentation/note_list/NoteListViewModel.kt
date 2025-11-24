@@ -160,7 +160,7 @@ class NoteListViewModel(
                     }
                     _events.send(NoteListEvent.NoteListError(error))
                 }
-                .onSuccess { notes ->
+                .onSuccess {
                     _state.update { state ->
                         state.copy(
                             isLoading = false
