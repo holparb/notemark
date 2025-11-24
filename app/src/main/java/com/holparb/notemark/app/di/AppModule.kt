@@ -1,6 +1,8 @@
 package com.holparb.notemark.app.di
 
 import com.holparb.notemark.app.NoteMarkApp
+import com.holparb.notemark.app.data.DataSyncImpl
+import com.holparb.notemark.app.domain.DataSync
 import com.holparb.notemark.app.presentation.MainViewModel
 import com.holparb.notemark.core.data.networking.HttpClientFactory
 import com.holparb.notemark.core.data.session_storage.SessionStorageDataStore
@@ -12,6 +14,7 @@ import io.ktor.client.engine.cio.CIO
 import kotlinx.coroutines.CoroutineScope
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
@@ -22,8 +25,9 @@ val appModule = module {
     singleOf(::UserPreferencesDataStore) bind UserPreferences::class
     singleOf(::SessionStorageDataStore) bind SessionStorage::class
     singleOf(::HttpClientFactory)
-    singleOf(::MainViewModel)
+    viewModelOf(::MainViewModel)
     single<HttpClient> {
         get<HttpClientFactory>().create(CIO.create())
     }
+    singleOf(::DataSyncImpl) bind DataSync::class
 }

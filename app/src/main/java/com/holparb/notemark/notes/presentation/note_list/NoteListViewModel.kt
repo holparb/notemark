@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class NoteListViewModel(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val userPreferences: UserPreferences,
     private val noteRepository: NoteRepository
 ) : ViewModel() {
