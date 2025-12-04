@@ -1,4 +1,4 @@
-package com.holparb.notemark.app.domain
+package com.holparb.notemark.core.datasync.domain
 
 interface DataSync {
     fun enqueueNoteSync(repeatInterval: Long)

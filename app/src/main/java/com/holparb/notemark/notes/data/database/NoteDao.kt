@@ -16,7 +16,7 @@ interface NoteDao {
     fun observeNotes(): Flow<List<NoteEntity>>
 
     @Query("SELECT * FROM notes WHERE noteId = :noteId")
-    suspend fun getNote(noteId: String): NoteEntity
+    suspend fun getNote(noteId: String): NoteEntity?
 
     @Upsert
     suspend fun upsertNote(note: NoteEntity)

@@ -1,11 +1,10 @@
-package com.holparb.notemark.app.data
+package com.holparb.notemark.core.datasync.data
 
 import android.content.Context
 import androidx.work.BackoffPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.holparb.notemark.app.domain.DataSync
-import com.holparb.notemark.notes.data.sync.NoteSyncWorker
+import com.holparb.notemark.core.datasync.domain.DataSync
 import java.time.Duration
 import java.util.concurrent.TimeUnit
 

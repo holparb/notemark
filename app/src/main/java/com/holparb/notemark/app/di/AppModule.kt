@@ -1,8 +1,6 @@
 package com.holparb.notemark.app.di
 
 import com.holparb.notemark.app.NoteMarkApp
-import com.holparb.notemark.app.data.DataSyncImpl
-import com.holparb.notemark.app.domain.DataSync
 import com.holparb.notemark.app.presentation.MainViewModel
 import com.holparb.notemark.core.data.networking.HttpClientFactory
 import com.holparb.notemark.core.data.session_storage.SessionStorageDataStore
@@ -29,5 +27,4 @@ val appModule = module {
     single<HttpClient> {
         get<HttpClientFactory>().create(CIO.create())
     }
-    singleOf(::DataSyncImpl) bind DataSync::class
 }
