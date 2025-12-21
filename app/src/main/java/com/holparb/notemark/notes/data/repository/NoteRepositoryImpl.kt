@@ -1,43 +1,28 @@
 package com.holparb.notemark.notes.data.repository
 
-import com.holparb.notemark.core.domain.result.NetworkError
 import com.holparb.notemark.core.domain.result.Result
+import com.holparb.notemark.core.domain.user_preferences.UserPreferences
 import com.holparb.notemark.notes.data.database.NoteDao
 import com.holparb.notemark.notes.data.database.NoteEntity
+import com.holparb.notemark.notes.data.database.OperationType
+import com.holparb.notemark.notes.data.database.SyncEntity
 import com.holparb.notemark.notes.data.mappers.toNote
-import com.holparb.notemark.notes.data.mappers.toNoteDto
 import com.holparb.notemark.notes.data.mappers.toNoteEntity
-import com.holparb.notemark.notes.data.remote.NoteRemoteDataSource
 import com.holparb.notemark.notes.domain.models.Note
 import com.holparb.notemark.notes.domain.repository.NoteRepository
 import com.holparb.notemark.notes.domain.result.DataError
 import com.holparb.notemark.notes.domain.result.DatabaseError
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.Json
+import timber.log.Timber
 import java.time.Instant
 import java.util.UUID
 
 class NoteRepositoryImpl(
     private val noteDao: NoteDao,
-    private val noteRemoteDataSource: NoteRemoteDataSource,
-    private val applicationScope: CoroutineScope
+    private val userPreferences: UserPreferences,
 ): NoteRepository {
-    override suspend fun getNotes(page: Int, size: Int): Result<Unit, DataError> {
-        return when(val remoteResult = noteRemoteDataSource.getNotes(page = page, size = size)) {
-            is Result.Error -> Result.Error(DataError.RemoteError(remoteResult.error))
-            is Result.Success -> {
-                val noteEntities = remoteResult.data.map { it.toNoteEntity() }
-                try {
-                    noteDao.upsertNotes(noteEntities)
-                    Result.Success(Unit)
-                } catch (e: Exception) {
-                    Result.Error(DataError.LocalError(DatabaseError.UPSERT_FAILED))
-                }
-            }
-        }
-    }
 
     override fun observeNotes(): Result<Flow<List<Note>>, DataError.LocalError> {
         return try {
@@ -52,11 +37,14 @@ class NoteRepositoryImpl(
     }
 
     override suspend fun getNote(noteId: String): Result<Note, DataError.LocalError> {
-        return try {
-            val note = noteDao.getNote(noteId)
-            Result.Success(note.toNote())
+        try {
+            return when(val note = noteDao.getNote(noteId)) {
+                null -> Result.Error(DataError.LocalError(DatabaseError.FETCH_FAILED))
+                else -> Result.Success(data = note.toNote())
+            }
         } catch (e: Exception) {
-            Result.Error(DataError.LocalError(DatabaseError.FETCH_FAILED))
+            Timber.e("Note fetch failed: ${e.message}")
+            return Result.Error(DataError.LocalError(DatabaseError.FETCH_FAILED))
         }
     }
 
@@ -77,51 +65,83 @@ class NoteRepositoryImpl(
     }
 
     override suspend fun createNote(note: Note): Result<Unit, DataError> {
-        try {
-            noteDao.upsertNote(note.toNoteEntity())
+        return try {
+            val syncEntity = SyncEntity(
+                id = UUID.randomUUID().toString(),
+                noteId = note.noteId,
+                userId = userPreferences.getUserId(),
+                operationType = OperationType.CREATE,
+                payload = Json.encodeToString(note.toNoteEntity()),
+                timestamp = Instant.now().toEpochMilli()
+            )
+            noteDao.upsertNoteWithSync(note.toNoteEntity(), syncEntity)
+            Result.Success(Unit)
         } catch(e: Exception) {
-            return Result.Error(DataError.LocalError(DatabaseError.UPSERT_FAILED))
+            Result.Error(DataError.LocalError(DatabaseError.UPSERT_FAILED))
         }
-
-        return applicationScope.async {
-            val remoteResult = noteRemoteDataSource.createNote(note.toNoteDto())
-            return@async when(remoteResult) {
-                is Result.Error -> Result.Error(DataError.RemoteError(NetworkError.BAD_REQUEST))
-                is Result.Success -> Result.Success(Unit)
-            }
-        }.await()
     }
 
     override suspend fun updateNote(note: Note): Result<Unit, DataError> {
-        try {
-            noteDao.upsertNote(note.toNoteEntity())
+        return try {
+            val syncEntityForNote = noteDao.getSyncEntryByNoteId(note.noteId)
+            val syncEntity = syncEntityForNote?.copy(
+                payload = Json.encodeToString(note.toNoteEntity()),
+                timestamp = Instant.now().toEpochMilli()
+            ) ?:
+            SyncEntity(
+                id = UUID.randomUUID().toString(),
+                noteId = note.noteId,
+                userId = userPreferences.getUserId(),
+                operationType = OperationType.UPDATE,
+                payload = Json.encodeToString(note.toNoteEntity()),
+                timestamp = Instant.now().toEpochMilli()
+            )
+            Timber.d("Updated sync entry: $syncEntity")
+            noteDao.upsertNoteWithSync(note.toNoteEntity(), syncEntity)
+            Result.Success(Unit)
         } catch(e: Exception) {
-            return Result.Error(DataError.LocalError(DatabaseError.UPSERT_FAILED))
+            Timber.e(e)
+            Result.Error(DataError.LocalError(DatabaseError.UPSERT_FAILED)) 
         }
-
-        return applicationScope.async {
-            val remoteResult = noteRemoteDataSource.updateNote(note.toNoteDto())
-            return@async when(remoteResult) {
-                is Result.Error -> Result.Error(DataError.RemoteError(NetworkError.BAD_REQUEST))
-                is Result.Success -> Result.Success(Unit)
-            }
-        }.await()
     }
 
     override suspend fun deleteNote(noteId: String): Result<Unit, DataError> {
-        try {
-            noteDao.deleteNoteById(noteId)
-        } catch(e: Exception) {
-            return Result.Error(DataError.LocalError(DatabaseError.DELETE_FAILED))
-        }
-
-        return applicationScope.async {
-            val remoteResult = noteRemoteDataSource.deleteNote(noteId)
-            return@async when(remoteResult) {
-                is Result.Error -> Result.Error(DataError.RemoteError(NetworkError.BAD_REQUEST))
-                is Result.Success -> Result.Success(Unit)
+        return try {
+            // Check if there are any sync entries for the note
+            val syncEntryForNote = noteDao.getSyncEntryByNoteId(noteId)
+            if(syncEntryForNote == null ) {
+                Timber.d("No entry for note, create delete entry")
+                val syncEntity = SyncEntity(
+                    id = UUID.randomUUID().toString(),
+                    noteId = noteId,
+                    userId = userPreferences.getUserId(),
+                    operationType = OperationType.DELETE,
+                    payload = noteId,
+                    timestamp = Instant.now().toEpochMilli()
+                )
+                noteDao.deleteNoteWithSync(noteId, syncEntity)
+            } else {
+                when(syncEntryForNote.operationType) {
+                    OperationType.CREATE -> {
+                        Timber.d("Delete without sync")
+                        noteDao.deleteNoteWithoutSync(noteId, syncEntryForNote.id)
+                    }
+                    OperationType.UPDATE -> {
+                        Timber.d("Existing entry for note, modify to delete entry")
+                        val syncEntity = syncEntryForNote.copy(
+                            payload = noteId,
+                            operationType = OperationType.DELETE
+                        )
+                        noteDao.deleteNoteWithSync(noteId, syncEntity)
+                    }
+                    OperationType.DELETE -> Unit
+                }
             }
-        }.await()
+            Result.Success(Unit)
+        } catch(e: Exception) {
+            Timber.e(e)
+            Result.Error(DataError.LocalError(DatabaseError.DELETE_FAILED))
+        }
     }
 
     override suspend fun deleteNoteFromDatabase(noteId: String): Result<Unit, DataError.LocalError> {

@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class NoteListViewModel(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val userPreferences: UserPreferences,
     private val noteRepository: NoteRepository
 ) : ViewModel() {
@@ -62,6 +62,7 @@ class NoteListViewModel(
             is NoteListAction.NoteLongClick -> noteLongClick(action.noteId)
             is NoteListAction.DeleteConfirm -> deleteNote()
             NoteListAction.DeleteDialogDismiss -> dismissDialog()
+            NoteListAction.SettingsClick -> Unit
         }
     }
 
@@ -153,13 +154,13 @@ class NoteListViewModel(
         }
         viewModelScope.launch {
             noteRepository.getNotes()
-                .onError {
+                .onError { error ->
                     _state.update {
                         it.copy(isLoading = false)
                     }
-                    //TODO send error event to UI
+                    _events.send(NoteListEvent.NoteListError(error))
                 }
-                .onSuccess { notes ->
+                .onSuccess {
                     _state.update { state ->
                         state.copy(
                             isLoading = false

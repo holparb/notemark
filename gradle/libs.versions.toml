@@ -21,6 +21,7 @@ mockk = "1.14.4"
 room = "2.7.2"
 ksp = "2.1.20-2.0.0"
 timber = "5.0.1"
+worker = "2.11.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -69,6 +70,8 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
 
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+
+androidx-work = { module = "androidx.work:work-runtime-ktx", version.ref = "worker" }
 
 [bundles]
 koin = ["koin-core", "koin-android", "koin-androidx-compose"]

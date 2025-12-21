@@ -5,6 +5,7 @@ import com.holparb.notemark.core.data.session_storage.RefreshTokenRequest
 import com.holparb.notemark.core.domain.result.Result
 import com.holparb.notemark.core.domain.session_storage.SessionData
 import com.holparb.notemark.core.domain.session_storage.SessionStorage
+import com.holparb.notemark.core.domain.user_preferences.UserPreferences
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.auth.Auth
@@ -25,7 +26,8 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 class HttpClientFactory(
-    private val sessionStorage: SessionStorage
+    private val sessionStorage: SessionStorage,
+    private val userPreferences: UserPreferences
 ) {
 
     fun create(
@@ -79,6 +81,8 @@ class HttpClientFactory(
                                 sessionStorage.updateSessionData(
                                     SessionData()
                                 )
+                                userPreferences.saveUserId("")
+                                userPreferences.saveUsername("")
                                 BearerTokens("", "")
                             }
                             is Result.Success -> {

@@ -12,6 +12,7 @@ import io.ktor.client.engine.cio.CIO
 import kotlinx.coroutines.CoroutineScope
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
@@ -22,7 +23,7 @@ val appModule = module {
     singleOf(::UserPreferencesDataStore) bind UserPreferences::class
     singleOf(::SessionStorageDataStore) bind SessionStorage::class
     singleOf(::HttpClientFactory)
-    singleOf(::MainViewModel)
+    viewModelOf(::MainViewModel)
     single<HttpClient> {
         get<HttpClientFactory>().create(CIO.create())
     }

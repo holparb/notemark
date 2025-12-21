@@ -2,7 +2,9 @@ package com.holparb.notemark.notes.data.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Entity(tableName = "notes")
 data class NoteEntity(
     @PrimaryKey

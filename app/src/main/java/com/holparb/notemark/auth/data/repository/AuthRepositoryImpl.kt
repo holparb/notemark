@@ -7,6 +7,7 @@ import com.holparb.notemark.core.domain.result.Result
 import com.holparb.notemark.core.domain.session_storage.SessionData
 import com.holparb.notemark.core.domain.session_storage.SessionStorage
 import com.holparb.notemark.core.domain.user_preferences.UserPreferences
+import java.util.UUID
 
 class AuthRepositoryImpl(
     private val authDataSource: AuthDataSource,
@@ -42,6 +43,8 @@ class AuthRepositoryImpl(
             is Result.Error -> Result.Error(result.error)
             is Result.Success -> {
                 userPreferences.saveUsername(result.data.username!!)
+                val userId = UUID.nameUUIDFromBytes(email.toByteArray()).toString()
+                userPreferences.saveUserId(userId)
                 sessionStorage.updateSessionData(
                     SessionData(
                         accessToken = result.data.accessToken,

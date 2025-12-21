@@ -4,6 +4,7 @@ import android.app.Application
 import com.holparb.notemark.BuildConfig
 import com.holparb.notemark.app.di.appModule
 import com.holparb.notemark.auth.di.authModule
+import com.holparb.notemark.core.datasync.di.dataSyncModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -25,6 +26,7 @@ class NoteMarkApp: Application() {
             androidContext(this@NoteMarkApp)
             modules(
                 appModule,
+                dataSyncModule,
                 authModule,
                 notesModule
             )

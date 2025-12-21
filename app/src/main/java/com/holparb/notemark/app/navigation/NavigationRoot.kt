@@ -73,6 +73,9 @@ fun NavigationRoot(
                 NoteListRoot(
                     navigateToCreateEditNote = { noteId ->
                         navController.navigate(NavigationRoute.CreateEditNote(noteId))
+                    },
+                    navigateToSettings = {
+                        // TODO add navigation to Settings screen
                     }
                 )
             }

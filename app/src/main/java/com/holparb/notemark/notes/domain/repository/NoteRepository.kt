@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
 
-    suspend fun getNotes(page: Int = -1, size: Int = 20): Result<Unit, DataError>
     fun observeNotes(): Result<Flow<List<Note>>, DataError.LocalError>
     suspend fun getNote(noteId: String): Result<Note, DataError.LocalError>
     suspend fun createNewNoteInDatabase(): Result<String, DataError.LocalError>
