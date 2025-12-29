@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.holparb.notemark.app.navigation.NavigationRoute
+import com.holparb.notemark.core.datasync.domain.DataSyncRepository
 import com.holparb.notemark.core.domain.result.onError
 import com.holparb.notemark.core.domain.result.onSuccess
 import com.holparb.notemark.core.domain.user_preferences.UserPreferences
@@ -26,7 +27,8 @@ import timber.log.Timber
 class NoteListViewModel(
     savedStateHandle: SavedStateHandle,
     private val userPreferences: UserPreferences,
-    private val noteRepository: NoteRepository
+    private val noteRepository: NoteRepository,
+    private val dataSyncRepository: DataSyncRepository
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
@@ -153,7 +155,7 @@ class NoteListViewModel(
             it.copy(isLoading = true)
         }
         viewModelScope.launch {
-            noteRepository.getNotes()
+            dataSyncRepository.fetchNotes()
                 .onError { error ->
                     _state.update {
                         it.copy(isLoading = false)

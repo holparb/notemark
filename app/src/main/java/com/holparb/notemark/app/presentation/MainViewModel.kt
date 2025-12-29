@@ -2,9 +2,8 @@ package com.holparb.notemark.app.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.holparb.notemark.app.domain.DataSync
+import com.holparb.notemark.core.datasync.domain.DataSync
 import com.holparb.notemark.core.domain.session_storage.SessionStorage
-import com.holparb.notemark.core.domain.user_preferences.UserPreferences
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,7 +17,6 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val sessionStorage: SessionStorage,
-    private val userPreferences: UserPreferences,
     private val dataSync: DataSync
 ) : ViewModel() {
 

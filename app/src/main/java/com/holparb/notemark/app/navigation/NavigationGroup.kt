@@ -8,4 +8,7 @@ sealed interface NavigationGroup {
 
     @Serializable
     data object Notes: NavigationGroup
+
+    @Serializable
+    data object Settings: NavigationGroup
 }

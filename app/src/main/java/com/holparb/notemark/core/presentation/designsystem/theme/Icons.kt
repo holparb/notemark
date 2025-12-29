@@ -21,3 +21,15 @@ val Icons.Outlined.EyeOff: ImageVector
 val Icons.Outlined.Plus: ImageVector
     @Composable
     get() = ImageVector.vectorResource(R.drawable.plus)
+
+val Icons.Outlined.Clock: ImageVector
+    @Composable
+    get() = ImageVector.vectorResource((R.drawable.clock))
+
+val Icons.Outlined.Refresh: ImageVector
+    @Composable
+    get() = ImageVector.vectorResource((R.drawable.refresh))
+
+val Icons.Outlined.LogOut: ImageVector
+    @Composable
+    get() = ImageVector.vectorResource((R.drawable.log_out))

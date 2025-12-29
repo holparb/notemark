@@ -10,6 +10,7 @@ import com.holparb.notemark.auth.presentation.login.LoginRoot
 import com.holparb.notemark.auth.presentation.register.RegisterRoot
 import com.holparb.notemark.notes.presentation.create_edit_note.CreateEditNoteRoot
 import com.holparb.notemark.notes.presentation.note_list.NoteListRoot
+import com.holparb.notemark.settings.presentation.SettingsRoot
 
 @Composable
 fun NavigationRoot(
@@ -75,12 +76,23 @@ fun NavigationRoot(
                         navController.navigate(NavigationRoute.CreateEditNote(noteId))
                     },
                     navigateToSettings = {
-                        // TODO add navigation to Settings screen
+                        navController.navigate(NavigationGroup.Settings)
                     }
                 )
             }
             composable<NavigationRoute.CreateEditNote> {
                 CreateEditNoteRoot(
+                    navigateBack = {
+                        navController.navigateUp()
+                    }
+                )
+            }
+        }
+        navigation<NavigationGroup.Settings>(
+            startDestination = NavigationRoute.Settings
+        ) {
+            composable<NavigationRoute.Settings> {
+                SettingsRoot(
                     navigateBack = {
                         navController.navigateUp()
                     }
