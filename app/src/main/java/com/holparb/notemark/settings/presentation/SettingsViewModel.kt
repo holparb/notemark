@@ -33,6 +33,7 @@ class SettingsViewModel : ViewModel() {
             SettingsAction.LogOutClick -> logOut()
             SettingsAction.SyncIntervalClick -> toggleDropdownVisible()
             is SettingsAction.SyncOptionSelected -> selectSyncOption(action.selectedOption)
+            SettingsAction.BackNavigationClick -> Unit
         }
     }
 
@@ -57,5 +58,4 @@ class SettingsViewModel : ViewModel() {
     private fun toggleDropdownVisible() {
         _state.update { it.copy(isDropdownVisible = !state.value.isDropdownVisible) }
     }
-
 }

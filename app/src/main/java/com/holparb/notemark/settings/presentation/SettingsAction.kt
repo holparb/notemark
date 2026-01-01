@@ -6,4 +6,5 @@ sealed interface SettingsAction {
     data object LogOutClick: SettingsAction
     data class SyncOptionSelected(val selectedOption: Int): SettingsAction
     data object DropdownDismissed: SettingsAction
+    data object BackNavigationClick: SettingsAction
 }

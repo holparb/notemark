@@ -1,6 +1,7 @@
 package com.holparb.notemark.settings.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -51,7 +52,13 @@ fun SettingsRoot(
 
     SettingsScreen(
         state = state,
-        onAction = viewModel::onAction
+        onAction = { action ->
+            when(action) {
+                SettingsAction.BackNavigationClick -> navigateBack()
+                else -> Unit
+            }
+            viewModel.onAction(action)
+        }
     )
 }
 
@@ -75,13 +82,20 @@ fun SettingsScreen(
                 ),
                 title = {
                     Text(
+                        modifier = Modifier.padding(start = 8.dp),
                         text = stringResource(R.string.settings).uppercase(getDefault()),
                         style = MaterialTheme.typography.headlineSmall.copy(color = MaterialTheme.colorScheme.onSurfaceVariant)
                     )
                 },
                 navigationIcon = {
                     Icon(
-                        modifier = Modifier.size(20.dp),
+                        modifier = Modifier
+                            .size(20.dp)
+                            .clickable(
+                                onClick = {
+                                    onAction(SettingsAction.BackNavigationClick)
+                                }
+                            ),
                         imageVector = Icons.AutoMirrored.Default.KeyboardArrowLeft,
                         contentDescription = stringResource(R.string.navigate_back),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
