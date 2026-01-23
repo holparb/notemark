@@ -2,9 +2,12 @@ package com.holparb.notemark.core.data.user_preferences
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.holparb.notemark.core.domain.user_preferences.UserPreferences
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
@@ -20,6 +23,8 @@ class UserPreferencesDataStore(
 
     private val usernameKey = stringPreferencesKey("username")
     private val userIdKey = stringPreferencesKey("userId")
+    private val lastSyncTimestampKey = longPreferencesKey("lastSync")
+    private val syncIntervalKey = intPreferencesKey("syncInterval")
 
     override suspend fun saveUsername(username: String) {
         context.userPreferencesDatastore.edit { prefs ->
@@ -43,5 +48,29 @@ class UserPreferencesDataStore(
         return context.userPreferencesDatastore.data.map { prefs ->
             prefs[userIdKey] ?: ""
         }.first()
+    }
+
+    override suspend fun saveLastSyncTimestamp(timestamp: Long) {
+        context.userPreferencesDatastore.edit { prefs ->
+            prefs[lastSyncTimestampKey] = timestamp
+        }
+    }
+
+    override fun observeLastSyncTimestamp(): Flow<Long> {
+        return context.userPreferencesDatastore.data.map { prefs ->
+            prefs[lastSyncTimestampKey] ?: -1
+        }
+    }
+
+    override suspend fun saveSyncInterval(syncIntervalMinutes: Int) {
+        context.userPreferencesDatastore.edit { prefs ->
+            prefs[syncIntervalKey] = syncIntervalMinutes
+        }
+    }
+
+    override fun observeSyncInterval(): Flow<Int> {
+        return context.userPreferencesDatastore.data.map { prefs ->
+            prefs[syncIntervalKey] ?: 0
+        }
     }
 }

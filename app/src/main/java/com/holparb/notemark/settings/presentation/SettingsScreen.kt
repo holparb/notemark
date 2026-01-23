@@ -33,7 +33,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.holparb.notemark.R
 import com.holparb.notemark.core.presentation.designsystem.theme.Clock
 import com.holparb.notemark.core.presentation.designsystem.theme.LogOut
@@ -41,11 +40,12 @@ import com.holparb.notemark.core.presentation.designsystem.theme.NoteMarkTheme
 import com.holparb.notemark.core.presentation.designsystem.theme.Refresh
 import com.holparb.notemark.settings.presentation.components.DropdownOptionsMenu
 import com.holparb.notemark.settings.presentation.components.SettingsItem
+import org.koin.androidx.compose.koinViewModel
 import java.util.Locale.getDefault
 
 @Composable
 fun SettingsRoot(
-    viewModel: SettingsViewModel = viewModel(),
+    viewModel: SettingsViewModel = koinViewModel<SettingsViewModel>(),
     navigateBack: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -151,7 +151,7 @@ fun SettingsScreen(
                     onAction(SettingsAction.DataSyncClick)
                 },
                 title = stringResource(R.string.sync_data),
-                subtitle = stringResource(R.string.last_sync, state.lastSync),
+                subtitle = state.lastSync,
                 leadingContent = {
                     Icon(
                         imageVector = Icons.Outlined.Refresh,

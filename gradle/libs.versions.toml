@@ -57,6 +57,7 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
+koin-androidx-workmanager = { group = "io.insert-koin", name = "koin-androidx-workmanager", version.ref = "koin" }
 
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
@@ -74,7 +75,7 @@ timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 androidx-work = { module = "androidx.work:work-runtime-ktx", version.ref = "worker" }
 
 [bundles]
-koin = ["koin-core", "koin-android", "koin-androidx-compose"]
+koin = ["koin-core", "koin-android", "koin-androidx-compose", "koin-androidx-workmanager"]
 room = ["room-ktx", "room-runtime"]
 
 ktor = [

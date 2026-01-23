@@ -5,7 +5,6 @@ import com.holparb.notemark.notes.data.database.NoteDao
 import com.holparb.notemark.notes.data.database.NoteDatabase
 import com.holparb.notemark.notes.data.remote.NoteRemoteDataSource
 import com.holparb.notemark.notes.data.repository.NoteRepositoryImpl
-import com.holparb.notemark.core.datasync.data.NoteSyncWorker
 import com.holparb.notemark.notes.domain.repository.NoteRepository
 import com.holparb.notemark.notes.presentation.create_edit_note.CreateEditNoteViewModel
 import com.holparb.notemark.notes.presentation.note_list.NoteListViewModel
@@ -31,5 +30,4 @@ val notesModule = module {
 
     viewModelOf(::NoteListViewModel)
     viewModelOf(::CreateEditNoteViewModel)
-    singleOf(::NoteSyncWorker)
 }

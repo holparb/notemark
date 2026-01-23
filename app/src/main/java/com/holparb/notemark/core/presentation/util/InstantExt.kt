@@ -14,3 +14,8 @@ fun Instant.toReadableDate(): String {
     }
     return this.atZone(ZoneId.systemDefault()).format(formatter)
 }
+
+fun Instant.toDateAndTime(): String {
+    val formatter = DateTimeFormatter.ofPattern("dd MM yyyy, HH:mm")
+    return this.atZone(ZoneId.systemDefault()).format(formatter)
+}
