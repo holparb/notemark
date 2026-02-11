@@ -12,8 +12,10 @@ import com.holparb.notemark.R
 import com.holparb.notemark.app.presentation.NotificationChannels
 import com.holparb.notemark.core.datasync.domain.DataSyncRepository
 import com.holparb.notemark.core.domain.user_preferences.UserPreferences
+import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import timber.log.Timber
 import java.time.Instant
 
 class NoteSyncWorker (
@@ -23,10 +25,6 @@ class NoteSyncWorker (
 
     private val dataSyncRepository: DataSyncRepository by inject()
     private val userPreferences: UserPreferences by inject()
-
-    override suspend fun getForegroundInfo(): ForegroundInfo {
-        return getForegroundInfo(applicationContext)
-    }
 
     private fun getForegroundInfo(context: Context): ForegroundInfo {
         return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)  {
@@ -44,10 +42,17 @@ class NoteSyncWorker (
     }
 
     override suspend fun doWork(): Result {
+        try {
+            setForeground(getForegroundInfo(applicationContext))
+        } catch (e: Exception) {
+            Timber.e("Could not set worker in foreground: \n${e.message}")
+            return Result.retry()
+        }
+        delay(1000)
+        userPreferences.saveLastSyncTimestamp(Instant.now().toEpochMilli())
         return when(dataSyncRepository.syncNotes()) {
-            is com.holparb.notemark.core.domain.result.Result.Error -> Result.retry()
+            is com.holparb.notemark.core.domain.result.Result.Error -> Result.failure()
             is com.holparb.notemark.core.domain.result.Result.Success -> {
-                userPreferences.saveLastSyncTimestamp(Instant.now().toEpochMilli())
                 Result.success()
             }
         }
